@@ -44,18 +44,20 @@
             global $post;
             wp_enqueue_script( 'customers-cpt-scripts', CustomerURL . '/assets/public/js/scripts.js', array(), false, true );
 
-            if($this->cpt === $post->post_type){
+            $ajax_slug = 'Customer';
+            $vars = [
+                'url'           => site_url('customer-ajax'),
+                'nounce'         => wp_create_nonce( $ajax_slug . "_nounce" ),
+                'action'         => 'CustomerActionRequest',
+                'Customer_ajax'   => $ajax_slug,
+            ];
+
+            if(isset($post) && $this->cpt === $post->post_type){
                 wp_enqueue_script( 'single-scripts', CustomerURL . '/assets/public/js/single.js', array(), false, true );
-                $ajax_slug = 'Customer';
-                $vars = [
-                    'url'           => site_url('customer-ajax'),
-                    'nounce'         => wp_create_nonce( $ajax_slug . "_nounce" ),
-                    'action'         => 'CustomerActionRequest',
-                    'Customer_ajax'   => $ajax_slug,
-                ];
                 wp_localize_script('single-scripts', $ajax_slug.'_js', $vars);
-                wp_localize_script('customers-cpt-scripts', $ajax_slug.'_js', $vars);
             }
+
+            wp_localize_script('customers-cpt-scripts', $ajax_slug.'_js', $vars);
         }
 
         /**
@@ -122,6 +124,14 @@
                 ),
             ));
             $fmUser->add_meta_box('Dados de Cadastro', $this->cpt, 'normal', 'high');
+
+            $fmPass = new Fieldmanager_Group(array(
+                'name' => 'user_pass',
+                'children' => array(
+                    'pass' => new Fieldmanager_Password('Senha'),
+                ),
+            ));
+            $fmPass->add_meta_box('Senha', $this->cpt, 'normal', 'high');
 
             $fmAddress = new Fieldmanager_Group(array(
                 'name' => 'user_address',
@@ -256,6 +266,14 @@
                         return self::UpdateUserDatas();
                         break;
 
+                    case 'loginUser':
+                        return self::loginUser();
+                        break;
+
+                    case 'userLogout':
+                        return self::UserLogout();
+                        break;
+
                     default;
                         break;
                 }
@@ -272,11 +290,9 @@
             }
 
             $postID = (isset($_REQUEST['userid'])) ? sanitize_text_field($_REQUEST['userid']) : null;
-            $pass = (isset($_REQUEST['user_password'])) ? sanitize_text_field($_REQUEST['user_password']) : null;
             $email = (isset($_REQUEST['user_email'])) ? sanitize_text_field($_REQUEST['user_email']) : null;
             $name = (isset($_REQUEST['user_name'])) ?  sanitize_text_field($_REQUEST['user_name']) : null;
             $lastname = (isset($_REQUEST['user_lastname'])) ? sanitize_text_field($_REQUEST['user_lastname']) : null;
-
 
             $args = array(
                 'name' => $name,
@@ -309,6 +325,10 @@
                 ));
             }
 
+            wp_update_post( array(
+                'ID'         => $postID,
+                'post_title' => $email
+            ) );
             update_post_meta( $postID, 'user_fields', $args );
             update_post_meta( $postID, 'user_address', $addressArgs );
             update_post_meta( $postID, 'user_phones', $phonesArgs );
@@ -333,6 +353,85 @@
 
             return wp_send_json(get_the_post_thumbnail_url($postID));
             exit();
+        }
+
+        public function loginUser()
+        {
+            $nonce = isset($_REQUEST['nounce']) ? sanitize_text_field($_REQUEST['nounce']) : '';
+            if ( ! wp_verify_nonce( $nonce, 'Customer_nounce' ) ) {
+                return wp_send_json(new WP_Error('Erro', 'Nounce Inválido'));
+            }
+
+            $user = (isset($_REQUEST['userLogin'])) ? sanitize_text_field($_REQUEST['userLogin']) : null;
+            $pass = (isset($_REQUEST['userPass'])) ? sanitize_text_field($_REQUEST['userPass']) : null;
+
+            $userID = self::userExists($user);
+            if(!$userID){
+                return wp_send_json(new WP_Error('Erro', 'Usuário não existe'));
+            }
+
+            $pass = self::checkPassword($userID, $pass);
+            if(!$pass){
+                return wp_send_json(new WP_Error('Erro', 'Dados inválidos'));
+            }
+
+            $name = array_shift(get_post_meta($userID, 'user_fields'));
+
+            session_start();
+            session_regenerate_id();
+            $_SESSION['loggedin'] = TRUE;
+            $_SESSION['name'] = $name['name'];
+            $_SESSION['id'] = $userID;
+
+            return wp_send_json(array(
+                'message' => 'Welcome ' . $_SESSION['name'] . '!',
+                'url' => get_permalink($userID)
+            ));
+        }
+
+        /**
+         * Check user exists
+         *
+         * @param $user
+         * @return bool|int
+         */
+        private function userExists($user) : int | bool
+        {
+            if ( ! function_exists( 'post_exists' ) ) {
+                require_once( ABSPATH . 'wp-admin/includes/post.php' );
+            }
+
+            return post_exists($user, '', '', $this->cpt);
+        }
+
+        /**
+         * Check Password
+         *
+         * @param $userID
+         * @param $pass
+         * @return bool
+         */
+        private function checkPassword($userID, $pass) : bool
+        {
+            $postmeta = array_shift(get_post_meta((int) $userID, 'user_pass'));
+
+            if(isset($postmeta, $postmeta['pass']) && $postmeta['pass'] === $pass){
+                return true;
+            }
+
+            return false;
+        }
+
+        /**
+         * Logout
+         */
+        private function UserLogout()
+        {
+            session_start();
+            session_destroy();
+            return wp_send_json(array(
+                'message' => 'Logout successfully!'
+            ));
         }
 
     }

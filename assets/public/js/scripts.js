@@ -6,7 +6,7 @@ window.addEventListener('load', function () {
      * @param obj
      * @returns {string}
      */
-    var objectToUrlParams = function(obj){
+    var objectScriptsToUrlParams = function(obj){
         let params = "";
         for (var key in obj) {
             if (params != "") {
@@ -17,57 +17,102 @@ window.addEventListener('load', function () {
         return params;
     };
 
-    let isLoading = false;
+    let isScriptsLoading = false;
     const btnCustomerForm = document.getElementById('loginSend');
     if(btnCustomerForm){
         btnCustomerForm.addEventListener('click', function (){
-            loginUser();
+            loginSend();
         });
     }
 
-    let loginUser = function(){
-        if(isLoading){
+    const btnLogout = document.getElementById('userLogout');
+    if(btnLogout){
+        btnLogout.addEventListener('click', function (){
+            userLogout();
+        });
+    }
+
+    let userLogout = function(){
+        if(isScriptsLoading){
             return false;
         }
 
-        let btnLoader = document.querySelector('#loginUser span');
+        let btnLoader = document.querySelector('#userLogout span');
         btnLoader.classList.remove('d-none');
 
-        isLoading = true;
+        isScriptsLoading = true;
 
         let params = {
-            action: 'loginUserDatas',
-            nounce: Customer_js.nounce,
-            url: Customer_js.Customer_ajax
+            action: 'userLogout',
         };
 
-        let countPhones = document.querySelectorAll('.formPhones');
-        if(countPhones){
-            params['countPhones'] = countPhones.length;
-        }
-
-        let countAddress = document.querySelectorAll('.formAddress');
-        if(countAddress){
-            params['countAddress'] = countAddress.length;
-        }
-
-        let form = document.getElementById('userContainer');
-        let getFormData = new FormData(form);
-        for (let [key, value] of getFormData) {
-            params[key] = value;
-        }
-
-        params = objectToUrlParams(params);
+        params = objectScriptsToUrlParams(params);
 
         fetch(Customer_js.url + '?' + params)
+            .then(response => {
+                if(response.ok) return response.json();
+            })
+            .then(json => {
+                console.log(json.message);
+                window.location.href = '/';
+            })
+            .then(function (data) {
+                isScriptsLoading = false;
+            })
+            .catch( () => {
+                isScriptsLoading = false;
+            })
+            .finally(() => {
+                btnLoader.classList.add("d-none");
+            });
+    }
+
+    let loginSend = function(){
+        if(isScriptsLoading){
+            return false;
+        }
+
+        let btnLoader = document.querySelector('#loginSend span');
+        btnLoader.classList.remove('d-none');
+
+        isScriptsLoading = true;
+
+        let userLogin = document.getElementById('usermail');
+        if(userLogin){
+            userLogin = userLogin.value;
+        }
+
+        let userPass = document.getElementById('userpass');
+        if(userPass){
+            userPass = userPass.value;
+        }
+
+        let params = {
+            action: 'loginUser',
+            nounce: Customer_js.nounce,
+            url: Customer_js.Customer_ajax,
+            userLogin: userLogin,
+            userPass: userPass
+        };
+
+        params = objectScriptsToUrlParams(params);
+
+        fetch(Customer_js.url + '?' + params)
+            .then(response => {
+                if(response.ok) return response.json();
+            })
+            .then(json => {
+            console.log(json.message);
+                window.location.href = json.url;
+            })
             .then(function (response) {
                 return response.text();
             })
             .then(function (data) {
-                isLoading = false;
+                isScriptsLoading = false;
             })
             .catch( () => {
-                isLoading = false;
+                isScriptsLoading = false;
             })
             .finally(() => {
                 btnLoader.classList.add("d-none");
@@ -75,10 +120,3 @@ window.addEventListener('load', function () {
     }
 
 });
-const on = (element, type, selector, handler) => {
-    element.addEventListener(type, (event) => {
-        if (event.target.closest(selector)) {
-            handler(event);
-        }
-    });
-};

@@ -1,5 +1,11 @@
 <?php
+    session_start();
+    if (!isset($_SESSION['loggedin'])) {
+        header('Location: /');
+        exit;
+    }
     get_header();
+
     $userFields = get_post_meta(get_the_ID(), 'user_fields')[0];
     $username = (isset($userFields['name'])) ? $userFields['name'] : '';
     $userEmail = (isset($userFields['email'])) ? $userFields['email'] : '';
@@ -14,7 +20,7 @@
                     <?php if(get_the_post_thumbnail_url(get_the_ID())): ?>
                         <img src="<?php echo esc_url(get_the_post_thumbnail_url(get_the_ID())); ?>" id="profileUserImage" class="img-thumbnail card-img-top" alt="...">
                     <?php endif; ?>
-                        <h5 class="card-title"><?php echo esc_html(get_the_title()); ?></h5>
+                        <h5 class="card-title"><?php echo esc_attr($username); ?></h5>
                     </div>
                     <div class="card-footer d-flex justify-content-end">
                         <button type="button" class="btn btn-sm btn-outline-secondary border-0" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -41,10 +47,9 @@
                     <div class="col-md-4 mb-3">
                         <label for="user_email" class="form-label">E-mail</label>
                         <div class="input-group">
-                            <input type="email" class="form-control" name="user_email" id="user_email" aria-label="E-mail" value="<?php echo esc_attr($userEmail); ?>" required>
+                            <input type="email" class="form-control" name="user_email" id="user_email" aria-label="E-mail" value="<?php echo esc_attr(get_the_title()); ?>" required>
                         </div>
                     </div>
-
 
                     <h2 class="display-6">Endereço</h2>
                     <?php
@@ -426,15 +431,6 @@
 
                     <?php endif; ?>
 
-                    <div class="col-md-6 mb-3">
-                        <label for="user_password" class="form-label">Senha</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control" name="user_password" id="user_password" aria-label="Senha">
-                        </div>
-                    </div>
-
-
-
                     <input type="hidden" name="userid" id="userid" value="<?php echo esc_attr(get_the_ID()); ?>">
                     <div class="col-12">
                         <button class="btn btn-outline-dark" type="button" id="updateUser">
@@ -447,12 +443,11 @@
         </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
+    <div class="modal fade" id="staticBackdrop" aria-hidden="true" aria-labelledby="staticBackdropLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Alterar Imagem</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -467,11 +462,10 @@
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Understood</button>
-                </div>
+
             </div>
         </div>
     </div>
-<?php get_footer(); ?>
+
+    <
+<?php get_footer();
