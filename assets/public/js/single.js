@@ -60,8 +60,18 @@ window.addEventListener('load', function () {
         params = objectToUrlParams(params);
 
         fetch(Customer_js.url + '?' + params)
-            .then(function (response) {
-                return response.text();
+            .then(response => {
+                if(response.ok) return response.json();
+            })
+            .then(json => {
+                console.log(json.message);
+                let userID = document.getElementById('userid');
+                if(userID){
+                    userID.value = json.id
+                }
+                if(json.status && json.status === 'ok'){
+                    window.location.href = json.url;
+                }
             })
             .then(function (data) {
                 isLoading = false;
@@ -162,7 +172,7 @@ window.addEventListener('load', function () {
                         console.log(data);
                         let profileUserImage = document.getElementById('profileUserImage');
                         if(profileUserImage){
-                            profileUserImage.src = data;
+                            profileUserImage.src = data.image;
                         }
                         return data;
                     }).catch((err) => {

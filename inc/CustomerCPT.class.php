@@ -37,6 +37,8 @@
             add_action( 'parse_request', array( $this, 'CustomerActionRequest' ), 10, 1 );
             add_action( 'save_post', array( $this, 'ActionSaveCustomerCPT' ), 10, 3 );
             add_filter( 'single_template', array($this, 'CustomerSingleTemplate'));
+            add_action('dv_blank_navbar_coll', function(){include_once(CustomerPATH . '/templates/login.php');});
+            add_action('init', function(){ session_start(); });
         }
 
         public function CustomerEnqueue( ) : void
@@ -52,7 +54,7 @@
                 'Customer_ajax'   => $ajax_slug,
             ];
 
-            if(isset($post) && $this->cpt === $post->post_type){
+            if(isset($post) && $this->cpt === $post->post_type || get_page_template_slug() == 'customer-register.php'){
                 wp_enqueue_script( 'single-scripts', CustomerURL . '/assets/public/js/single.js', array(), false, true );
                 wp_localize_script('single-scripts', $ajax_slug.'_js', $vars);
             }
@@ -183,8 +185,8 @@
          * @return string
          */
         function CustomersPanelTemplate( $page_template ){
-            if ( get_page_template_slug() == 'customer-panel.php' ) {
-                $page_template = CustomerPATH . '/templates/customer-login.php';
+            if ( get_page_template_slug() == 'customer-register.php' ) {
+                $page_template = CustomerPATH . '/templates/customer-register.php';
             }
             return $page_template;
         }
@@ -199,7 +201,7 @@
          * @return mixed
          */
         function HookTemplatesPageList( $post_templates, $wp_theme, $post, $post_type ) {
-            $post_templates['customer-login.php'] = __('Login');
+            $post_templates['customer-register.php'] = __('Cadastro de clientes');
             return $post_templates;
         }
 
@@ -282,7 +284,7 @@
 
         }
 
-        public function UpdateUserDatas()
+        public function UpdateUserDatas($action = null)
         {
             $nonce = isset($_REQUEST['nounce']) ? sanitize_text_field($_REQUEST['nounce']) : '';
             if ( ! wp_verify_nonce( $nonce, 'Customer_nounce' ) ) {
@@ -290,7 +292,29 @@
             }
 
             $postID = (isset($_REQUEST['userid'])) ? sanitize_text_field($_REQUEST['userid']) : null;
+
             $email = (isset($_REQUEST['user_email'])) ? sanitize_text_field($_REQUEST['user_email']) : null;
+            if(!$email){
+                return wp_send_json(array(
+                    'message' => 'O campo E-mail é obrigatório',
+                    'id' => null
+                ));
+            }
+
+            $pass = (isset($_REQUEST['user_pass'])) ? sanitize_text_field($_REQUEST['user_pass']) : null;
+            $confirm_pass = (isset($_REQUEST['confirm_user_pass'])) ? sanitize_text_field($_REQUEST['confirm_user_pass']) : null;
+            if(!$pass || strlen($pass) < 1 ){
+                return wp_send_json(array(
+                    'message' => 'O campo senha é obrigatório',
+                    'id' => null
+                ));
+            }else if($pass !== $confirm_pass){
+                return wp_send_json(array(
+                    'message' => 'Senhas não conferem',
+                    'id' => null
+                ));
+            }
+
             $name = (isset($_REQUEST['user_name'])) ?  sanitize_text_field($_REQUEST['user_name']) : null;
             $lastname = (isset($_REQUEST['user_lastname'])) ? sanitize_text_field($_REQUEST['user_lastname']) : null;
 
@@ -325,15 +349,41 @@
                 ));
             }
 
-            wp_update_post( array(
-                'ID'         => $postID,
-                'post_title' => $email
-            ) );
+            if($postID){
+                wp_update_post( array(
+                    'ID'         => $postID,
+                    'post_title' => $email
+                ) );
+            }else{
+                if(!self::userExists($email)){
+                    $postID = wp_insert_post(array(
+                        'post_type' => $this->cpt,
+                        'post_title' => $email,
+                        'post_content' => $name,
+                        'post_status' => 'publish'
+                    ));
+                }else{
+                    return wp_send_json(new WP_Error('wperro', 'Já existe um usuário com este e-mail cadastrado'));
+                }
+
+            }
+
             update_post_meta( $postID, 'user_fields', $args );
             update_post_meta( $postID, 'user_address', $addressArgs );
             update_post_meta( $postID, 'user_phones', $phonesArgs );
+            update_post_meta( $postID, 'user_pass', array(
+                'pass' => $pass
+            ));
 
-            exit();
+            self::loginUser(array(
+                'user' => $email,
+                'pass' => $pass
+            ), true);
+
+            return wp_send_json(array(
+                'message' => 'Usuário atualizado com sucesso!',
+                'id' => $postID
+            ));
         }
 
         public function UploadProfileImage() {
@@ -342,28 +392,45 @@
                 return wp_send_json(new WP_Error('wperro', 'Nounce Inválido'));
             }
 
+            $postID = (isset($_REQUEST['postID'])) ? sanitize_text_field($_REQUEST['postID']) : null;
+
+            if(!$postID){
+                return wp_send_json(array(
+                    'message' => 'Campo email não pode ser vazio',
+                    'image' => null,
+                    'id' => null
+                ));
+            }
+
             require_once (ABSPATH . 'wp-admin/includes/image.php');
             require_once (ABSPATH . 'wp-admin/includes/file.php');
             require_once (ABSPATH . 'wp-admin/includes/media.php');
 
-            $postID = (isset($_REQUEST['postID'])) ? sanitize_text_field($_REQUEST['postID']) : null;
             $imgID = media_handle_upload('photo', $postID);
 
             set_post_thumbnail($postID,$imgID);
 
-            return wp_send_json(get_the_post_thumbnail_url($postID));
-            exit();
+            return wp_send_json(array(
+                'message' => 'Upload efetuado com sucesso',
+                'image' => get_the_post_thumbnail_url($postID),
+                'id' => $postID
+            ));
         }
 
-        public function loginUser()
+        public function loginUser($args = array(), $escape_nonce = null)
         {
             $nonce = isset($_REQUEST['nounce']) ? sanitize_text_field($_REQUEST['nounce']) : '';
-            if ( ! wp_verify_nonce( $nonce, 'Customer_nounce' ) ) {
+            if (!$escape_nonce && !wp_verify_nonce( $nonce, 'Customer_nounce' ) ) {
                 return wp_send_json(new WP_Error('Erro', 'Nounce Inválido'));
             }
 
             $user = (isset($_REQUEST['userLogin'])) ? sanitize_text_field($_REQUEST['userLogin']) : null;
             $pass = (isset($_REQUEST['userPass'])) ? sanitize_text_field($_REQUEST['userPass']) : null;
+
+            if(isset($args['user']) && isset($args['pass'])){
+                $user = $args['user'];
+                $pass = $args['pass'];
+            }
 
             $userID = self::userExists($user);
             if(!$userID){
@@ -385,7 +452,8 @@
 
             return wp_send_json(array(
                 'message' => 'Welcome ' . $_SESSION['name'] . '!',
-                'url' => get_permalink($userID)
+                'url' => get_permalink($userID),
+                'status' => 'ok'
             ));
         }
 

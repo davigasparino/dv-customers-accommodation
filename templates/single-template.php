@@ -1,6 +1,7 @@
 <?php
     session_start();
-    if (!isset($_SESSION['loggedin'])) {
+
+    if (!isset($_SESSION['loggedin']) || $_SESSION['id'] !== get_the_ID()) {
         header('Location: /');
         exit;
     }
@@ -17,9 +18,11 @@
             <div class="col-md-2 col-12">
                 <div class="card">
                     <div class="card-body p-2">
-                    <?php if(get_the_post_thumbnail_url(get_the_ID())): ?>
-                        <img src="<?php echo esc_url(get_the_post_thumbnail_url(get_the_ID())); ?>" id="profileUserImage" class="img-thumbnail card-img-top" alt="...">
-                    <?php endif; ?>
+
+                        <?php $profileImage = get_the_post_thumbnail_url(get_the_ID()); ?>
+                        <?php $profileImage = (isset($profileImage) && !empty($profileImage)) ? $profileImage : CustomerURL . 'assets/public/img/image-default.jpg'; ?>
+                        <img src="<?php echo esc_url($profileImage); ?>" id="profileUserImage" class="img-thumbnail card-img-top" alt="...">
+
                         <h5 class="card-title"><?php echo esc_attr($username); ?></h5>
                     </div>
                     <div class="card-footer d-flex justify-content-end">
@@ -467,5 +470,5 @@
         </div>
     </div>
 
-    <
+
 <?php get_footer();

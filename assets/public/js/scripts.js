@@ -42,6 +42,11 @@ window.addEventListener('load', function () {
 
         isScriptsLoading = true;
 
+        let btnlogout = document.querySelector('span.btn-icon');
+        if(btnlogout){
+            btnlogout.classList.add('d-none');
+        }
+
         let params = {
             action: 'userLogout',
         };
@@ -56,14 +61,13 @@ window.addEventListener('load', function () {
                 console.log(json.message);
                 window.location.href = '/';
             })
-            .then(function (data) {
-                isScriptsLoading = false;
-            })
             .catch( () => {
-                isScriptsLoading = false;
             })
             .finally(() => {
                 btnLoader.classList.add("d-none");
+                if(btnlogout){
+                    btnlogout.classList.remove('d-none');
+                }
             });
     }
 
@@ -103,7 +107,9 @@ window.addEventListener('load', function () {
             })
             .then(json => {
             console.log(json.message);
-                window.location.href = json.url;
+                if(json.status && json.status === 'ok'){
+                    window.location.href = json.url;
+                }
             })
             .then(function (response) {
                 return response.text();
