@@ -1,0 +1,14 @@
+#loginUsers{
+    width: 350px;
+}
+#nav-user-panel, #loginUsers{
+    top: 48px;
+    right: 0;
+}
+
+.nav-image-profile{
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50%;
+}

@@ -65,10 +65,6 @@ window.addEventListener('load', function () {
             })
             .then(json => {
                 console.log(json.message);
-                let userID = document.getElementById('userid');
-                if(userID){
-                    userID.value = json.id
-                }
                 if(json.status && json.status === 'ok'){
                     window.location.href = json.url;
                 }

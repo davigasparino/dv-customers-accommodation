@@ -33,6 +33,7 @@
             add_filter( 'theme_page_templates', array($this, 'HookTemplatesPageList'), 10, 4 );
             add_filter( 'page_template', array($this, 'CustomersPanelTemplate') );
             add_action('wp_enqueue_scripts', array($this, 'CustomerEnqueue'));
+            add_action('wp_head', array($this, 'CustomerEnqueueStyles'));
             add_action( 'init', array( $this, 'CustomerAjaxAddRewriteRules' ), 10 );
             add_action( 'parse_request', array( $this, 'CustomerActionRequest' ), 10, 1 );
             add_action( 'save_post', array( $this, 'ActionSaveCustomerCPT' ), 10, 3 );
@@ -60,6 +61,11 @@
             }
 
             wp_localize_script('customers-cpt-scripts', $ajax_slug.'_js', $vars);
+        }
+
+        public function CustomerEnqueueStyles()
+        {
+            wp_enqueue_style('customers-cpt-css', CustomerURL . '/assets/public/css/style.css');
         }
 
         /**
@@ -303,12 +309,12 @@
 
             $pass = (isset($_REQUEST['user_pass'])) ? sanitize_text_field($_REQUEST['user_pass']) : null;
             $confirm_pass = (isset($_REQUEST['confirm_user_pass'])) ? sanitize_text_field($_REQUEST['confirm_user_pass']) : null;
-            if(!$pass || strlen($pass) < 1 ){
+            if(isset($pass) && strlen($pass) < 1 ){
                 return wp_send_json(array(
                     'message' => 'O campo senha é obrigatório',
                     'id' => null
                 ));
-            }else if($pass !== $confirm_pass){
+            }else if(isset($pass) && $pass !== $confirm_pass){
                 return wp_send_json(array(
                     'message' => 'Senhas não conferem',
                     'id' => null
@@ -348,7 +354,7 @@
                     'principal' => (isset($_REQUEST['user_phones_principal_'.$i])) ? sanitize_text_field($_REQUEST['user_phones_principal_'.$i]) : null,
                 ));
             }
-
+            $newUser = false;
             if($postID){
                 wp_update_post( array(
                     'ID'         => $postID,
@@ -362,6 +368,9 @@
                         'post_content' => $name,
                         'post_status' => 'publish'
                     ));
+                    if($postID){
+                        $newUser = true;
+                    }
                 }else{
                     return wp_send_json(new WP_Error('wperro', 'Já existe um usuário com este e-mail cadastrado'));
                 }
@@ -371,14 +380,19 @@
             update_post_meta( $postID, 'user_fields', $args );
             update_post_meta( $postID, 'user_address', $addressArgs );
             update_post_meta( $postID, 'user_phones', $phonesArgs );
-            update_post_meta( $postID, 'user_pass', array(
-                'pass' => $pass
-            ));
+            if(isset($pass)){
+                update_post_meta( $postID, 'user_pass', array(
+                    'pass' => $pass
+                ));
+            }
 
-            self::loginUser(array(
-                'user' => $email,
-                'pass' => $pass
-            ), true);
+            if($newUser){
+                self::loginUser(array(
+                    'user' => $email,
+                    'pass' => $pass
+                ), true);
+            }
+
 
             return wp_send_json(array(
                 'message' => 'Usuário atualizado com sucesso!',
@@ -446,12 +460,12 @@
 
             session_start();
             session_regenerate_id();
-            $_SESSION['loggedin'] = TRUE;
-            $_SESSION['name'] = $name['name'];
-            $_SESSION['id'] = $userID;
+            $_SESSION['customer_loggedin'] = TRUE;
+            $_SESSION['customer_name'] = $name['name'];
+            $_SESSION['customer_id'] = $userID;
 
             return wp_send_json(array(
-                'message' => 'Welcome ' . $_SESSION['name'] . '!',
+                'message' => 'Welcome ' . $_SESSION['customer_name'] . '!',
                 'url' => get_permalink($userID),
                 'status' => 'ok'
             ));
