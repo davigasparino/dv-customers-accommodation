@@ -63,7 +63,10 @@
             wp_localize_script('customers-cpt-scripts', $ajax_slug.'_js', $vars);
         }
 
-        public function CustomerEnqueueStyles()
+        /**
+         * Customer Enqueue Styles
+         */
+        public function CustomerEnqueueStyles() : void
         {
             wp_enqueue_style('customers-cpt-css', CustomerURL . '/assets/public/css/style.css');
         }
@@ -282,6 +285,10 @@
                         return self::UserLogout();
                         break;
 
+                    case 'updatePass':
+                        return self::updatePass();
+                        break;
+
                     default;
                         break;
                 }
@@ -290,7 +297,59 @@
 
         }
 
-        public function UpdateUserDatas($action = null)
+        /**
+         * Update Pass
+         *
+         * @return string
+         */
+        public function updatePass() : string
+        {
+            $nonce = isset($_REQUEST['nounce']) ? sanitize_text_field($_REQUEST['nounce']) : '';
+            if ( ! wp_verify_nonce( $nonce, 'Customer_nounce' ) ) {
+                return wp_send_json(new WP_Error('wperro', 'Nounce Inválido'));
+            }
+
+            $oldPassword = (isset($_REQUEST['oldPassword'])) ? sanitize_text_field($_REQUEST['oldPassword']) : null;
+            $newPassword = (isset($_REQUEST['newPassword'])) ? sanitize_text_field($_REQUEST['newPassword']) : null;
+            $confirmNewPassword = (isset($_REQUEST['confirmNewPassword'])) ? sanitize_text_field($_REQUEST['confirmNewPassword']) : null;
+            $userID = (isset($_REQUEST['userPassword'])) ? sanitize_text_field($_REQUEST['userPassword']) : null;
+
+            if(empty($newPassword) || is_null($newPassword) || $newPassword !== $confirmNewPassword){
+                return wp_send_json(array(
+                    'message' => 'Senhas não conferem',
+                ));
+            }
+
+            $pass = get_post_meta($userID, 'user_pass');
+            if(isset($pass)){
+                $pass = array_shift($pass)['pass'];
+            }
+
+            if($pass !== $oldPassword){
+                return wp_send_json(array(
+                    'message' => 'Senha incorreta',
+                ));
+            }
+
+            update_post_meta($userID, 'user_pass', array(
+                'pass' => $newPassword
+            ));
+
+            return wp_send_json(array(
+                'message' => 'Senha atualizada com sucesso',
+                'old' => $oldPassword,
+                'new' => $newPassword,
+                'confirm' => $confirmNewPassword,
+            ));
+        }
+
+        /**
+         * Update User Datas
+         *
+         * @param null $action
+         * @return string
+         */
+        public function UpdateUserDatas($action = null) : string
         {
             $nonce = isset($_REQUEST['nounce']) ? sanitize_text_field($_REQUEST['nounce']) : '';
             if ( ! wp_verify_nonce( $nonce, 'Customer_nounce' ) ) {
@@ -299,30 +358,52 @@
 
             $postID = (isset($_REQUEST['userid'])) ? sanitize_text_field($_REQUEST['userid']) : null;
 
+            $name = (isset($_REQUEST['user_name'])) ?  sanitize_text_field($_REQUEST['user_name']) : null;
+            if(!$name){
+                return wp_send_json(array(
+                    'message' => 'O campo Nome é obrigatório',
+                    'class' => 'alert,alert-danger'
+                ));
+            }
+
+            $lastname = (isset($_REQUEST['user_lastname'])) ? sanitize_text_field($_REQUEST['user_lastname']) : null;
+            if(!$lastname){
+                return wp_send_json(array(
+                    'message' => 'O campo Nome é obrigatório',
+                    'class' => 'alert,alert-danger'
+                ));
+            }
+
             $email = (isset($_REQUEST['user_email'])) ? sanitize_text_field($_REQUEST['user_email']) : null;
             if(!$email){
                 return wp_send_json(array(
-                    'message' => 'O campo E-mail é obrigatório',
-                    'id' => null
+                    'message' => 'O campo e-mail é obrigatório',
+                    'class' => 'alert,alert-danger'
                 ));
             }
 
-            $pass = (isset($_REQUEST['user_pass'])) ? sanitize_text_field($_REQUEST['user_pass']) : null;
-            $confirm_pass = (isset($_REQUEST['confirm_user_pass'])) ? sanitize_text_field($_REQUEST['confirm_user_pass']) : null;
-            if(isset($pass) && strlen($pass) < 1 ){
-                return wp_send_json(array(
-                    'message' => 'O campo senha é obrigatório',
-                    'id' => null
-                ));
-            }else if(isset($pass) && $pass !== $confirm_pass){
-                return wp_send_json(array(
-                    'message' => 'Senhas não conferem',
-                    'id' => null
-                ));
-            }
+            if(isset($pass)){
+                $pass = (isset($_REQUEST['user_pass'])) ? sanitize_text_field($_REQUEST['user_pass']) : null;
+                $confirm_pass = (isset($_REQUEST['confirm_user_pass'])) ? sanitize_text_field($_REQUEST['confirm_user_pass']) : null;
+                if(isset($pass) && strlen($pass) < 1 ){
+                    return wp_send_json(array(
+                        'message' => 'O campo senha é obrigatório',
+                        'class' => 'alert,alert-danger'
+                    ));
+                }else if(isset($pass) && $pass !== $confirm_pass){
+                    return wp_send_json(array(
+                        'message' => 'Senhas não conferem',
+                        'class' => 'alert,alert-danger'
+                    ));
+                }
 
-            $name = (isset($_REQUEST['user_name'])) ?  sanitize_text_field($_REQUEST['user_name']) : null;
-            $lastname = (isset($_REQUEST['user_lastname'])) ? sanitize_text_field($_REQUEST['user_lastname']) : null;
+                if(strlen($pass) < 8){
+                    return wp_send_json(array(
+                        'message' => 'Senha precisa ter pelo menos 8 caracteres',
+                        'class' => 'alert,alert-danger'
+                    ));
+                }
+            }
 
             $args = array(
                 'name' => $name,
@@ -344,6 +425,17 @@
                 ));
             }
 
+            foreach ($addressArgs as $allItems){
+                foreach ($allItems as $item => $item_value){
+                    if(empty($item_value)){
+                        return wp_send_json(array(
+                            'message' => 'O campo '.$item.' é obrigatório.',
+                            'class' => 'alert,alert-danger'
+                        ));
+                    }
+                }
+            }
+
             $countPhones = (isset($_REQUEST['countPhones'])) ?  sanitize_text_field($_REQUEST['countPhones']) : 0;
             $phonesArgs = array();
             for ($i = 0; $i < $countPhones; $i++){
@@ -351,9 +443,20 @@
                     'ddi' => (isset($_REQUEST['user_phones_ddi_'.$i])) ? sanitize_text_field($_REQUEST['user_phones_ddi_'.$i]) : '',
                     'ddd' => (isset($_REQUEST['user_phones_ddd_'.$i])) ? sanitize_text_field($_REQUEST['user_phones_ddd_'.$i]) : '',
                     'number' => (isset($_REQUEST['user_phones_number_'.$i])) ? sanitize_text_field($_REQUEST['user_phones_number_'.$i]) : '',
-                    'principal' => (isset($_REQUEST['user_phones_principal_'.$i])) ? sanitize_text_field($_REQUEST['user_phones_principal_'.$i]) : null,
                 ));
             }
+
+            foreach ($phonesArgs as $allItems){
+                foreach ($allItems as $item => $item_value){
+                    if(empty($item_value)){
+                        return wp_send_json(array(
+                            'message' => 'O campo '.$item.' é obrigatório.',
+                            'class' => 'alert,alert-danger'
+                        ));
+                    }
+                }
+            }
+
             $newUser = false;
             if($postID){
                 wp_update_post( array(
@@ -372,7 +475,10 @@
                         $newUser = true;
                     }
                 }else{
-                    return wp_send_json(new WP_Error('wperro', 'Já existe um usuário com este e-mail cadastrado'));
+                    return wp_send_json(array(
+                        'message' => 'Já existe um usuário com este e-mail cadastrado',
+                        'class' => 'alert,alert-warning'
+                    ));
                 }
 
             }
@@ -396,11 +502,19 @@
 
             return wp_send_json(array(
                 'message' => 'Usuário atualizado com sucesso!',
+                'class' => 'alert,alert-success',
                 'id' => $postID
             ));
         }
 
-        public function UploadProfileImage() {
+
+        /**
+         * Upload Profile Image
+         *
+         * @return string
+         */
+        public function UploadProfileImage() : string
+        {
             $nonce = isset($_REQUEST['nounce']) ? sanitize_text_field($_REQUEST['nounce']) : '';
             if ( ! wp_verify_nonce( $nonce, 'Customer_nounce' ) ) {
                 return wp_send_json(new WP_Error('wperro', 'Nounce Inválido'));
@@ -431,7 +545,14 @@
             ));
         }
 
-        public function loginUser($args = array(), $escape_nonce = null)
+        /**
+         * loginUser
+         *
+         * @param array $args
+         * @param null $escape_nonce
+         * @return string|null
+         */
+        public function loginUser($args = array(), $escape_nonce = null) : string | null
         {
             $nonce = isset($_REQUEST['nounce']) ? sanitize_text_field($_REQUEST['nounce']) : '';
             if (!$escape_nonce && !wp_verify_nonce( $nonce, 'Customer_nounce' ) ) {
@@ -441,19 +562,32 @@
             $user = (isset($_REQUEST['userLogin'])) ? sanitize_text_field($_REQUEST['userLogin']) : null;
             $pass = (isset($_REQUEST['userPass'])) ? sanitize_text_field($_REQUEST['userPass']) : null;
 
-            if(isset($args['user']) && isset($args['pass'])){
+            if(isset($args['user'], $args['pass'])){
                 $user = $args['user'];
                 $pass = $args['pass'];
             }
 
+            if(empty($user) || empty($pass)){
+                return wp_send_json(array(
+                    'message' => 'Campos obrigatórios',
+                    'class' => 'alert,alert-danger'
+                ));
+            }
+
             $userID = self::userExists($user);
             if(!$userID){
-                return wp_send_json(new WP_Error('Erro', 'Usuário não existe'));
+                return wp_send_json(array(
+                    'message' => 'Exte e-mail já consta em nosso sistema',
+                    'class' => 'alert,alert-danger'
+                ));
             }
 
             $pass = self::checkPassword($userID, $pass);
             if(!$pass){
-                return wp_send_json(new WP_Error('Erro', 'Dados inválidos'));
+                return wp_send_json(array(
+                    'message' => 'Dados inválidos',
+                    'class' => 'alert,alert-danger'
+                ));
             }
 
             $name = array_shift(get_post_meta($userID, 'user_fields'));
@@ -465,9 +599,10 @@
             $_SESSION['customer_id'] = $userID;
 
             return wp_send_json(array(
-                'message' => 'Welcome ' . $_SESSION['customer_name'] . '!',
+                'message' => 'Saudações ' . $_SESSION['customer_name'] . '!',
                 'url' => get_permalink($userID),
-                'status' => 'ok'
+                'status' => 'ok',
+                'class' => 'alert,alert-success'
             ));
         }
 

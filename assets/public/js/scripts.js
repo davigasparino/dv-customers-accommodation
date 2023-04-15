@@ -17,7 +17,18 @@ window.addEventListener('load', function () {
         return params;
     };
 
+    let formLogin = document.getElementById('loginUsers');
+    if(formLogin){
+        formLogin.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                btnCustomerForm.click();
+            }
+        });
+    }
+
     let isScriptsLoading = false;
+
     const btnCustomerForm = document.getElementById('loginSend');
     if(btnCustomerForm){
         btnCustomerForm.addEventListener('click', function (){
@@ -31,6 +42,8 @@ window.addEventListener('load', function () {
             userLogout();
         });
     }
+
+    let LoginMessageContainer = document.querySelector('.login-message-status div');
 
     let userLogout = function(){
         if(isScriptsLoading){
@@ -58,6 +71,9 @@ window.addEventListener('load', function () {
                 if(response.ok) return response.json();
             })
             .then(json => {
+                if(LoginMessageContainer){
+                    LoginMessageContainer.innerText = json.message
+                }
                 console.log(json.message);
                 window.location.href = '/';
             })
@@ -101,12 +117,22 @@ window.addEventListener('load', function () {
 
         params = objectScriptsToUrlParams(params);
 
+        if(LoginMessageContainer){
+            LoginMessageContainer.className = "";
+            LoginMessageContainer.innerText = "";
+        }
+
         fetch(Customer_js.url + '?' + params)
             .then(response => {
                 if(response.ok) return response.json();
             })
             .then(json => {
             console.log(json.message);
+                if(LoginMessageContainer){
+                    LoginMessageContainer.innerText = json.message;
+                    LoginMessageContainer.classList.add(json.class.split(',')[0], json.class.split(',')[1]);
+                }
+
                 if(json.status && json.status === 'ok'){
                     window.location.href = json.url;
                 }
@@ -126,3 +152,4 @@ window.addEventListener('load', function () {
     }
 
 });
+

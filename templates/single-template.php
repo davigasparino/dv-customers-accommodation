@@ -20,6 +20,7 @@
                 <?php include(CustomerPATH . '/templates/parts/single/form_image.php'); ?>
             </div>
             <div class="col-md-10 col-12">
+                <?php include(CustomerPATH . '/templates/parts/message_form.php'); ?>
                 <?php include(CustomerPATH . '/templates/parts/single/form.php'); ?>
             </div>
         </div>

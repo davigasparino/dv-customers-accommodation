@@ -18,12 +18,15 @@ window.addEventListener('load', function () {
     };
 
     let isLoading = false;
+    
     const btnCustomerForm = document.getElementById('updateUser');
     if(btnCustomerForm){
         btnCustomerForm.addEventListener('click', function (){
             updateDataUser();
         });
     }
+
+    let MessageContainer = document.querySelector('.form-message-status div');
 
     let updateDataUser = function(){
         if(isLoading){
@@ -59,12 +62,20 @@ window.addEventListener('load', function () {
 
         params = objectToUrlParams(params);
 
+        if(MessageContainer){
+            MessageContainer.className = "";
+            MessageContainer.innerText = "";
+        }
+
         fetch(Customer_js.url + '?' + params)
             .then(response => {
                 if(response.ok) return response.json();
             })
             .then(json => {
-                console.log(json.message);
+                if(MessageContainer){
+                    MessageContainer.innerText = json.message;
+                    MessageContainer.classList.add(json.class.split(',')[0], json.class.split(',')[1]);
+                }
                 if(json.status && json.status === 'ok'){
                     window.location.href = json.url;
                 }
@@ -179,6 +190,72 @@ window.addEventListener('load', function () {
             console.log('Huston we have problem...:', e);
         }
 
+    }
+
+    const btnUpPass = document.getElementById('updatePass');
+    if(btnUpPass){
+        btnUpPass.addEventListener('click', function (){
+            updatePassUser();
+        });
+    }
+
+    let updatePassUser = function(){
+        if(isLoading){
+            return false;
+        }
+
+        let btnLoader = document.querySelector('#updatePass span');
+        btnLoader.classList.remove('d-none');
+
+        isLoading = true;
+
+        let params = {
+            action: 'updatePass',
+            nounce: Customer_js.nounce,
+            url: Customer_js.Customer_ajax
+        };
+
+        let oldPassword = document.getElementById('oldPassword');
+        if(oldPassword){
+            params['oldPassword'] = oldPassword.value;
+        }
+
+        let newPassword = document.getElementById('newPassword');
+        if(oldPassword){
+            params['newPassword'] = newPassword.value;
+        }
+
+        let confirmNewPassword = document.getElementById('confirmNewPassword');
+        if(oldPassword){
+            params['confirmNewPassword'] = confirmNewPassword.value;
+        }
+
+        let userPassword = document.getElementById('userid');
+        if(oldPassword){
+            params['userPassword'] = userPassword.value;
+        }
+
+        params = objectToUrlParams(params);
+
+        fetch(Customer_js.url + '?' + params)
+            .then(response => {
+                if(response.ok) return response.json();
+            })
+            .then(json => {
+                console.log(json.message);
+                if(json.status && json.status === 'ok'){
+                    window.location.href = json.url;
+                }
+            })
+            .then(function (data) {
+                isLoading = false;
+            })
+            .catch( () => {
+                isLoading = false;
+            })
+            .finally(() => {
+                btnLoader.classList.add("d-none");
+            });
     }
 
 });
