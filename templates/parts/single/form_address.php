@@ -8,6 +8,8 @@
     $address_number = $address['address_number'] ?? '';
     $neighborhood = $address['neighborhood'] ?? '';
     $cep = $address['cep'] ?? '';
+    $itemRequire = ($customer_address['code'] !== 'XXX') ? 'required' : '';
+    $itemRequireClass = ($customer_address['code'] === 'XXX') ? 'required' : '';
 ?>
 <div class="col-12 mb-3 <?php echo esc_attr($customer_address['class']); ?>">
     <div class="card p-0">
@@ -20,13 +22,13 @@
                     <div class="input-group">
                         <input
                             type="text"
-                            class="form-control"
+                            class="form-control <?php echo esc_attr($itemRequireClass); ?>"
                             name="address_<?php echo esc_attr($customer_address['code']); ?>_country"
                             id="address_<?php echo esc_attr($customer_address['code']); ?>_country"
                             value="<?php echo esc_attr($country); ?>"
                             aria-label="Páis"
                             maxlength="40"
-                            required
+                            <?php echo esc_attr($itemRequire); ?>
                         >
                     </div>
                 </div>
@@ -35,13 +37,13 @@
                     <div class="input-group">
                         <input
                             type="text"
-                            class="form-control"
+                            class="form-control <?php echo esc_attr($itemRequireClass); ?>"
                             name="address_<?php echo esc_attr($customer_address['code']); ?>_state"
                             id="address_<?php echo esc_attr($customer_address['code']); ?>_state"
                             aria-label="Estado"
                             value="<?php echo esc_attr($state); ?>"
                             maxlength="40"
-                            required
+                            <?php echo esc_attr($itemRequire); ?>
                         >
                     </div>
                 </div>
@@ -50,13 +52,13 @@
                     <div class="input-group">
                         <input
                             type="text"
-                            class="form-control"
+                            class="form-control <?php echo esc_attr($itemRequireClass); ?>"
                             name="address_<?php echo esc_attr($customer_address['code']); ?>_city"
                             id="address_<?php echo esc_attr($customer_address['code']); ?>_city"
                             aria-label="Cidade"
                             value="<?php echo esc_attr($city); ?>"
                             maxlength="40"
-                            required
+                            <?php echo esc_attr($itemRequire); ?>
                         >
                     </div>
                 </div>
@@ -65,13 +67,13 @@
                     <div class="input-group">
                         <input
                             type="text"
-                            class="form-control"
+                            class="form-control <?php echo esc_attr($itemRequireClass); ?>"
                             name="address_<?php echo esc_attr($customer_address['code']); ?>_address"
                             id="address_<?php echo esc_attr($customer_address['code']); ?>_address"
                             aria-label="Endereço"
                             value="<?php echo esc_attr($street); ?>"
                             maxlength="70"
-                            required
+                            <?php echo esc_attr($itemRequire); ?>
                         >
                     </div>
                 </div>
@@ -80,13 +82,13 @@
                     <div class="input-group">
                         <input
                             type="text"
-                            class="form-control"
+                            class="form-control <?php echo esc_attr($itemRequireClass); ?>"
                             name="address_<?php echo esc_attr($customer_address['code']); ?>_address_number"
                             id="address_<?php echo esc_attr($customer_address['code']); ?>_address_number"
                             aria-label="número"
                             value="<?php echo esc_attr($address_number); ?>"
                             maxlength="8"
-                            required
+                            <?php echo esc_attr($itemRequire); ?>
                         >
                     </div>
                 </div>
@@ -95,13 +97,13 @@
                     <div class="input-group">
                         <input
                             type="text"
-                            class="form-control"
+                            class="form-control <?php echo esc_attr($itemRequireClass); ?>"
                             name="address_<?php echo esc_attr($customer_address['code']); ?>_neighborhood"
                             id="address_<?php echo esc_attr($customer_address['code']); ?>_neighborhood"
                             aria-label="Bairro"
                             value="<?php echo esc_attr($neighborhood); ?>"
                             maxlength="70"
-                            required
+                            <?php echo esc_attr($itemRequire); ?>
                         >
                     </div>
                 </div>
@@ -110,7 +112,7 @@
                     <div class="input-group mb-3">
                         <input
                             type="text"
-                            class="form-control"
+                            class="form-control <?php echo esc_attr($itemRequireClass); ?>"
                             placeholder="CEP"
                             aria-label="CEP"
                             value="<?php echo esc_attr($cep); ?>"

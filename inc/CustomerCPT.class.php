@@ -317,6 +317,14 @@
             if(empty($newPassword) || is_null($newPassword) || $newPassword !== $confirmNewPassword){
                 return wp_send_json(array(
                     'message' => 'Senhas não conferem',
+                    'class' => 'alert,alert-danger'
+                ));
+            }
+
+            if(strlen($newPassword) < 8){
+                return wp_send_json(array(
+                    'message' => 'Senha precisa conter mais que 8 caracteres',
+                    'class' => 'alert,alert-danger'
                 ));
             }
 
@@ -328,6 +336,7 @@
             if($pass !== $oldPassword){
                 return wp_send_json(array(
                     'message' => 'Senha incorreta',
+                    'class' => 'alert,alert-danger'
                 ));
             }
 
@@ -337,9 +346,7 @@
 
             return wp_send_json(array(
                 'message' => 'Senha atualizada com sucesso',
-                'old' => $oldPassword,
-                'new' => $newPassword,
-                'confirm' => $confirmNewPassword,
+                'class' => 'alert,alert-success'
             ));
         }
 
@@ -526,6 +533,7 @@
                 return wp_send_json(array(
                     'message' => 'Campo email não pode ser vazio',
                     'image' => null,
+                    'class' => 'alert,alert-danger',
                     'id' => null
                 ));
             }
@@ -541,6 +549,7 @@
             return wp_send_json(array(
                 'message' => 'Upload efetuado com sucesso',
                 'image' => get_the_post_thumbnail_url($postID),
+                'class' => 'alert,alert-success',
                 'id' => $postID
             ));
         }

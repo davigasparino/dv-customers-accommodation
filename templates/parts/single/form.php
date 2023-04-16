@@ -109,7 +109,7 @@ $lastname = (isset($userFields, $userFields['userfields'], $userFields['userfiel
     <input type="hidden" name="userid" id="userid" value="<?php echo esc_attr($userID); ?>">
 
     <div class="col-12">
-        <button class="btn btn-outline-dark" type="button" id="updateUser">
+        <button class="btn btn-outline-dark" type="submit" id="updateUser">
             <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
             Enviar
         </button>

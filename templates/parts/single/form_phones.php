@@ -4,6 +4,8 @@
     $ddi = $phones['ddi'] ?? '';
     $ddd = $phones['ddd'] ?? '';
     $number = $phones['number'] ?? '';
+    $itemRequire = ($customer_phones['code'] !== 'XXX') ? 'required' : '';
+    $itemRequireClass = ($customer_phones['code'] === 'XXX') ? 'required' : '';
 ?>
 <div class="col-md-6 <?php echo esc_attr($customer_phones['class']) ?> mb-3">
     <div class="card p-0">
@@ -17,12 +19,12 @@
                     <div class="input-group">
                         <input
                             type="text"
-                            class="form-control"
+                            class="form-control <?php echo esc_attr($itemRequireClass); ?>"
                             name="user_phones_ddi_<?php echo esc_attr($customer_phones['code']) ?>"
                             id="user_phones_ddi_<?php echo esc_attr($customer_phones['code']) ?>"
                             aria-label="DDI"
                             value="<?php echo esc_attr($ddi); ?>"
-                            required
+                            <?php echo esc_attr($itemRequire); ?>
                         >
                     </div>
                 </div>
@@ -32,12 +34,12 @@
                     <div class="input-group">
                         <input
                             type="text"
-                            class="form-control"
+                            class="form-control <?php echo esc_attr($itemRequireClass); ?>"
                             name="user_phones_ddd_<?php echo esc_attr($customer_phones['code']) ?>"
                             id="user_phones_ddd_<?php echo esc_attr($customer_phones['code']) ?>"
                             aria-label="DDD"
                             value="<?php echo esc_attr($ddd); ?>"
-                            required
+                            <?php echo esc_attr($itemRequire); ?>
                         >
                     </div>
                 </div>
@@ -47,12 +49,12 @@
                     <div class="input-group">
                         <input
                             type="text"
-                            class="form-control"
+                            class="form-control <?php echo esc_attr($itemRequireClass); ?>"
                             name="user_phones_number_<?php echo esc_attr($customer_phones['code']) ?>"
                             id="user_phones_number_<?php echo esc_attr($customer_phones['code']) ?>"
                             aria-label="Número"
                             value="<?php echo esc_attr($number); ?>"
-                            required
+                            <?php echo esc_attr($itemRequire); ?>
                         >
                     </div>
                 </div>

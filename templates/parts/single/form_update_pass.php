@@ -7,21 +7,24 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-5">
-                <form id="update-pass-form" class="g-3">
+                <div class="uppass-message-status">
+                    <div></div>
+                </div>
+                <form id="update-pass-form" class="g-3 needs-validation container" novalidate>
                     <div class="mb-3 row">
                         <label for="oldPassword" class="form-label">Senha Atual</label>
-                        <input type="password" class="form-control" id="oldPassword">
+                        <input type="password" class="form-control" id="oldPassword" required>
                     </div>
                     <div class="mb-3 row">
                         <label for="newPassword" class="form-label">Nova Senha</label>
-                        <input type="password" class="form-control" id="newPassword">
+                        <input type="password" class="form-control" id="newPassword" required>
                     </div>
                     <div class="mb-3 row">
                         <label for="confirmNewPassword" class="form-label">Confirmar Senha</label>
-                        <input type="password" class="form-control" id="confirmNewPassword">
+                        <input type="password" class="form-control" id="confirmNewPassword" required>
                     </div>
                     <div class="mb-3 row d-flex justify-content-end">
-                        <button class="btn btn-outline-dark w-50 mt-2" type="button" id="updatePass">
+                        <button class="btn btn-outline-dark w-50 mt-2" type="submit" id="updatePass">
                             <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                             Atualizar
                         </button>

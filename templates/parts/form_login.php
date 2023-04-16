@@ -18,7 +18,7 @@
     <div class="mb-3 form-check p-0">
         Ainda não possuí cadastro? <a href="/cadastrar">Criar Conta</a>
     </div>
-    <button class="btn btn-outline-dark" type="button" id="loginSend">
+    <button class="btn btn-outline-dark" type="submit" id="loginSend">
         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
         Entrar
     </button>
