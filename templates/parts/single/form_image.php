@@ -9,7 +9,7 @@ $lastname = (isset($userFields, $userFields['userfields'], $userFields['userfiel
         <?php $profileImage = (isset($userFields, $userFields['ID'])) ? get_the_post_thumbnail_url($userFields['ID']) : null; ?>
         <?php $profileImage = (isset($profileImage) && !empty($profileImage)) ? $profileImage : CustomerURL . 'assets/public/img/image-default.jpg'; ?>
         <figure class="figure position-relative p-0">
-            <img src="<?php echo esc_url($profileImage); ?>" class="figure-img img-fluid rounded m-0 " id="profileUserImage" alt="...">
+            <img src="<?php echo esc_url($profileImage); ?>" class="figure-img img-fluid rounded m-0 " id="profileUserImage" alt="..." data-bs-toggle="modal" data-bs-target="#viewImageMd">
             <div class="hstack gap-3 position-absolute bottom-0 end-0 ">
                 <div class="p-2">
                     <button type="button" class="btn btn-sm btn-outline-secondary border-0 p-0 m-0" data-bs-toggle="modal" data-bs-target="#updateImageMd">
@@ -48,6 +48,27 @@ $lastname = (isset($userFields, $userFields['userfields'], $userFields['userfiel
                         </label>
                     </div>
                 </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="viewImageMd" aria-hidden="true" aria-labelledby="viewImageMdLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="viewImageMdLabel">Imagem do perfil</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id="viewImageProfile" src="<?php echo esc_url($profileImage); ?>" class="img-fluid" alt="...">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-outline-secondary border-0 p-0 m-0" data-bs-toggle="modal" data-bs-target="#updateImageMd">
+                    <span class="material-symbols-outlined">image_search</span>
+                </button>
             </div>
 
         </div>

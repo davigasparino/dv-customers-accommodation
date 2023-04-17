@@ -17,7 +17,7 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-md-3 mb-3">
+                <div class="col-md-6 mb-3">
                     <label for="address_<?php echo esc_attr($customer_address['code']); ?>_country" class="form-label">País</label>
                     <div class="input-group">
                         <input
@@ -32,7 +32,7 @@
                         >
                     </div>
                 </div>
-                <div class="col-md-1 mb-3">
+                <div class="col-md-6 mb-3">
                     <label for="address_<?php echo esc_attr($customer_address['code']); ?>_state" class="form-label">Estado</label>
                     <div class="input-group">
                         <input
@@ -47,7 +47,7 @@
                         >
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-md-6 mb-3">
                     <label for="address_<?php echo esc_attr($customer_address['code']); ?>_city" class="form-label">Cidade</label>
                     <div class="input-group">
                         <input
@@ -62,7 +62,7 @@
                         >
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
                     <label for="address_<?php echo esc_attr($customer_address['code']); ?>_address" class="form-label">Endereço</label>
                     <div class="input-group">
                         <input
@@ -77,7 +77,7 @@
                         >
                     </div>
                 </div>
-                <div class="col-md-1 mb-3">
+                <div class="col-md-2 mb-3">
                     <label for="address_<?php echo esc_attr($customer_address['code']); ?>_address_number" class="form-label">N°</label>
                     <div class="input-group">
                         <input
@@ -92,7 +92,7 @@
                         >
                     </div>
                 </div>
-                <div class="col-md-2 mb-3">
+                <div class="col-md-5 mb-4">
                     <label for="address_<?php echo esc_attr($customer_address['code']); ?>_neighborhood" class="form-label">Bairro</label>
                     <div class="input-group">
                         <input
@@ -107,7 +107,7 @@
                         >
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-5 mb-3">
                     <label for="address_<?php echo esc_attr($customer_address['code']); ?>_cep" class="form-label">CEP</label>
                     <div class="input-group mb-3">
                         <input

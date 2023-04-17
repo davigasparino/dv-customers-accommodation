@@ -14,6 +14,10 @@ on(document, 'submit', '#loginUsers', function(event) {
     loginSend(isValid);
 });
 
+on(document, 'click', '#userLogout', function(event) {
+    userLogout();
+});
+
 const loginSend = (isValid) => {
 
     if(!isValid){
@@ -76,10 +80,6 @@ const loginSend = (isValid) => {
             btnLoader.classList.add("d-none");
         });
 }
-
-on(document, 'click', '#userLogout', function(event) {
-    userLogout();
-});
 
 const userLogout = () => {
     if(isScriptsLoading){

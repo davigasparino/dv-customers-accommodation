@@ -16,19 +16,32 @@
         DuplicateItems('protoAddress','formAddress', '.rowAddress');
     });
 
-    const removeItems = (item) => {
-        item.addEventListener("click",function(){
-            this.parentNode.parentNode.parentNode.remove();
-        });
-    }
-
     on(document, 'submit', '#image-file-form', function(event) {
         event.preventDefault();
         let isValid  = checkFormIsValid(event.target, event);
         SavePhoto(isValid);
     });
 
+    on(document, 'submit', '#update-pass-form', function(event) {
+        event.preventDefault();
+        let isValid  = checkFormIsValid(event.target, event);
+        updatePassUser(isValid);
+    });
+
+    on(document, 'submit', '#userContainer', function(event) {
+        event.preventDefault();
+        let isValid  = checkFormIsValid(event.target, event);
+        updateDataUser(isValid, event.target);
+    });
+
+    const removeItems = (item) => {
+        item.addEventListener("click",function(){
+            this.parentNode.parentNode.parentNode.remove();
+        });
+    }
+
     const SavePhoto = (isValidForm) => {
+
         if(!isValidForm){
             return false;
         }
@@ -60,6 +73,17 @@
                         if(profileUserImage){
                             profileUserImage.src = data.image;
                         }
+
+                        let viewImageProfile = document.getElementById('viewImageProfile');
+                        if(viewImageProfile){
+                            viewImageProfile.src = data.image;
+                        }
+
+                        let nav_image_profile = document.querySelector('.nav-image-profile');
+                        if(nav_image_profile){
+                            nav_image_profile.src = data.image;
+                        }
+
                         return data;
                     }).catch((err) => {
                         console.log(err);
@@ -70,12 +94,6 @@
         }
 
     }
-
-    on(document, 'submit', '#update-pass-form', function(event) {
-        event.preventDefault();
-        let isValid  = checkFormIsValid(event.target, event);
-        updatePassUser(isValid);
-    });
 
     const updatePassUser = (isValidForm) => {
         if(!isValidForm){
@@ -143,11 +161,6 @@
             });
     }
 
-    on(document, 'submit', '#userContainer', function(event) {
-        event.preventDefault();
-        let isValid  = checkFormIsValid(event.target, event);
-        updateDataUser(isValid, event.target);
-    });
 
     const updateDataUser = (isValidForm, formUserContainer) => {
 

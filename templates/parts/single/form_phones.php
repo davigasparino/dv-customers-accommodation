@@ -14,7 +14,7 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-md-2 mb-3">
+                <div class="col-md-3 mb-3">
                     <label for="user_phones_ddi_<?php echo esc_attr($customer_phones['code']) ?>" class="form-label">DDI</label>
                     <div class="input-group">
                         <input
@@ -29,7 +29,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-2 mb-3">
+                <div class="col-md-3 mb-3">
                     <label for="user_phones_ddd_<?php echo esc_attr($customer_phones['code']) ?>" class="form-label">DDD</label>
                     <div class="input-group">
                         <input
@@ -44,7 +44,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-8 mb-3">
+                <div class="col-md-6 mb-3">
                     <label for="user_phones_number_<?php echo esc_attr($customer_phones['code']) ?>" class="form-label">Número</label>
                     <div class="input-group">
                         <input
