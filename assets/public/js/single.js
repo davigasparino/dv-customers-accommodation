@@ -1,36 +1,40 @@
+    import { Utils } from './modules/utils.js';
+
+    const utils = new Utils();
+
     let isLoading = false;
 
-    on(document, 'click', '.removeAddress', function(event) {
+    utils.on(document, 'click', '.removeAddress', function(event) {
         event.target.parentNode.parentNode.parentNode.parentNode.remove();
     });
 
-    on(document, 'click', '.removePhones', function(event) {
+    utils.on(document, 'click', '.removePhones', function(event) {
         event.target.parentNode.parentNode.parentNode.parentNode.remove();
     });
 
-    on(document, 'click', '.clonePhones', function() {
+    utils.on(document, 'click', '.clonePhones', function() {
         DuplicateItems('protoPhones', 'formPhones', '.rowPhones');
     });
 
-    on(document, 'click', '.cloneAddress', function() {
+    utils.on(document, 'click', '.cloneAddress', function() {
         DuplicateItems('protoAddress','formAddress', '.rowAddress');
     });
 
-    on(document, 'submit', '#image-file-form', function(event) {
+    utils.on(document, 'submit', '#image-file-form', function(event) {
         event.preventDefault();
-        let isValid  = checkFormIsValid(event.target, event);
+        let isValid  = utils.checkFormIsValid(event.target, event);
         SavePhoto(isValid);
     });
 
-    on(document, 'submit', '#update-pass-form', function(event) {
+    utils.on(document, 'submit', '#update-pass-form', function(event) {
         event.preventDefault();
-        let isValid  = checkFormIsValid(event.target, event);
+        let isValid  = utils.checkFormIsValid(event.target, event);
         updatePassUser(isValid);
     });
 
-    on(document, 'submit', '#userContainer', function(event) {
+    utils.on(document, 'submit', '#userContainer', function(event) {
         event.preventDefault();
-        let isValid  = checkFormIsValid(event.target, event);
+        let isValid  = utils.checkFormIsValid(event.target, event);
         updateDataUser(isValid, event.target);
     });
 
@@ -66,7 +70,7 @@
                     return response.json().then((data) => {
                         let MessageContainer = document.querySelector('.image-message-status div');
                         if(MessageContainer){
-                            feedbackMessage(MessageContainer, data);
+                            utils.feedbackMessage(MessageContainer, data);
                         }
 
                         let profileUserImage = document.getElementById('profileUserImage');
@@ -135,7 +139,7 @@
             params['userPassword'] = userPassword.value;
         }
 
-        params = objectScriptsToUrlParams(params);
+        params = utils.objectScriptsToUrlParams(params);
 
         fetch(Customer_js.url + '?' + params)
             .then(response => {
@@ -144,7 +148,7 @@
             .then(json => {
                 let MessageContainer = document.querySelector('.uppass-message-status div');
                 if(MessageContainer){
-                    feedbackMessage(MessageContainer, json);
+                    utils.feedbackMessage(MessageContainer, json);
                 }
                 if(json.status && json.status === 'ok'){
                     window.location.href = json.url;
@@ -160,7 +164,6 @@
                 btnLoader.classList.add("d-none");
             });
     }
-
 
     const updateDataUser = (isValidForm, formUserContainer) => {
 
@@ -198,7 +201,7 @@
             params[key] = value;
         }
 
-        params = objectScriptsToUrlParams(params);
+        params = utils.objectScriptsToUrlParams(params);
 
         fetch(Customer_js.url + '?' + params)
             .then(response => {
@@ -207,7 +210,7 @@
             .then(json => {
                 let MessageContainer = document.querySelector('.form-message-status div');
                 if(MessageContainer){
-                    feedbackMessage(MessageContainer, json);
+                    utils.feedbackMessage(MessageContainer, json);
                 }
 
                 if(json.status && json.status === 'ok'){

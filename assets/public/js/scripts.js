@@ -1,20 +1,16 @@
+import { Utils } from './modules/utils.js';
+const utils = new Utils();
+
 let isScriptsLoading = false;
 
-const on = (element, type, selector, handler) => {
-    element.addEventListener(type, (event) => {
-        if (event.target.closest(selector)) {
-            handler(event);
-        }
-    });
-};
 
-on(document, 'submit', '#loginUsers', function(event) {
+utils.on(document, 'submit', '#loginUsers', function(event) {
     event.preventDefault();
-    let isValid  = checkFormIsValid(event.target, event);
+    let isValid  = utils.checkFormIsValid(event.target, event);
     loginSend(isValid);
 });
 
-on(document, 'click', '#userLogout', function(event) {
+utils.on(document, 'click', '#userLogout', function(event) {
     userLogout();
 });
 
@@ -51,7 +47,7 @@ const loginSend = (isValid) => {
         userPass: userPass
     };
 
-    params = objectScriptsToUrlParams(params);
+    params = utils.objectScriptsToUrlParams(params);
 
     fetch(Customer_js.url + '?' + params)
         .then(response => {
@@ -60,7 +56,7 @@ const loginSend = (isValid) => {
         .then(json => {
             let MessageContainer = document.querySelector('.login-message-status div');
             if(MessageContainer){
-                feedbackMessage(MessageContainer, json);
+                utils.feedbackMessage(MessageContainer, json);
             }
 
             if(json.status && json.status === 'ok'){
@@ -86,21 +82,13 @@ const userLogout = () => {
         return false;
     }
 
-    let btnLoader = document.querySelector('#userLogout span');
-    btnLoader.classList.remove('d-none');
-
     isScriptsLoading = true;
-
-    let btnlogout = document.querySelector('span.btn-icon');
-    if(btnlogout){
-        btnlogout.classList.add('d-none');
-    }
 
     let params = {
         action: 'userLogout',
     };
 
-    params = objectScriptsToUrlParams(params);
+    params = utils.objectScriptsToUrlParams(params);
 
     fetch(Customer_js.url + '?' + params)
         .then(response => {
@@ -109,53 +97,12 @@ const userLogout = () => {
         .then(json => {
             let MessageContainer = document.querySelector('.login-message-status div');
             if(MessageContainer){
-                feedbackMessage(MessageContainer, json);
+                utils.feedbackMessage(MessageContainer, json);
             }
-            window.location.href = '/';
         })
         .catch( () => {
         })
         .finally(() => {
-            btnLoader.classList.add("d-none");
-            if(btnlogout){
-                btnlogout.classList.remove('d-none');
-            }
+            window.location.href = '/';
         });
-}
-
-
-const objectScriptsToUrlParams = (obj) => {
-    let params = "";
-    for (var key in obj) {
-        if (params != "") {
-            params += "&";
-        }
-        params += key + "=" + encodeURIComponent(obj[key]);
-    }
-    return params;
-};
-
-const feedbackMessage = (container, json) => {
-    if(container){
-        container.className = "";
-        container.innerText = "";
-    }
-
-    if(container){
-        container.innerText = json.message;
-        container.classList.add(json.class.split(',')[0], json.class.split(',')[1]);
-    }
-}
-
-const checkFormIsValid = (theForm, theEvent) => {
-    let isValidForm = false;
-    if (!theForm.checkValidity()) {
-        theEvent.stopPropagation();
-        isValidForm = false;
-    }else{
-        isValidForm = true;
-    }
-    theForm.classList.add('was-validated');
-
-    return isValidForm;
 }

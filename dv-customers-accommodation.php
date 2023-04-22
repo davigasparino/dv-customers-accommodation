@@ -16,4 +16,3 @@ $autoload = new Autoload();
 
 $users_theme = new CustomerCPT();
 $users_theme->init();
-//teste

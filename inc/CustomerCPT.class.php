@@ -39,7 +39,26 @@
             add_action( 'save_post', array( $this, 'ActionSaveCustomerCPT' ), 10, 3 );
             add_filter( 'single_template', array($this, 'CustomerSingleTemplate'));
             add_action('dv_blank_navbar_coll', function(){include_once(CustomerPATH . '/templates/login.php');});
+            add_action('wp_footer', function(){ include(CustomerPATH . '/templates/parts/form_login.php'); });
             add_action('init', function(){ session_start(); });
+            add_filter('script_loader_tag', array($this, 'AddAttrType') , 10, 3);
+        }
+
+        /**
+         * Add Attribute Type
+         *
+         * @param $tag
+         * @param $handle
+         * @param $src
+         * @return string
+         */
+        public function AddAttrType($tag, $handle, $src) : string
+        {
+            if ( 'customers-cpt-scripts' !== $handle && 'single-scripts' !== $handle ) {
+                return $tag;
+            }
+            $tag = '<script type="module" src="' . esc_url( $src ) . '"></script>';
+            return $tag;
         }
 
         public function CustomerEnqueue( ) : void

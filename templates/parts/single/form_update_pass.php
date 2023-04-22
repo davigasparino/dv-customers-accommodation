@@ -1,4 +1,3 @@
-<p><a class="link-offset-2 link-secondary" href="#" data-bs-toggle="modal" data-bs-target="#updatePassMd">Trocar senha</a></p>
 <div class="modal fade" id="updatePassMd" aria-hidden="true" aria-labelledby="updatePassMdLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
