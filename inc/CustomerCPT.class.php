@@ -3,16 +3,16 @@
      * Class CustomerCPT
      */
     class CustomerCPT {
+        use CustomersUtils;
 
-        private string $cpt;
+        private string $cpt = 'customers';
 
         /**
          * CustomerCPT constructor.
-         * @param string|null $customer
          */
-        public function __construct( string $customer = null )
+        public function __construct( )
         {
-            $this->cpt = ($customer) ? $customer : 'customers';
+
         }
 
         /**
@@ -214,9 +214,10 @@
         public function CustomersRewriteTags() : void
         {
             add_rewrite_tag( '%panel%', '([^/]*)' );
+            add_rewrite_tag( '%partner%', '([^/]*)' );
             add_rewrite_rule(
-                '^customers/([^/]*)/([^/]*)/?$',
-                'index.php?customers=$matches[1]&panel=$matches[2]',
+                '^customers/([^/]*)/([^/]*)/?([^/]*)/?$',
+                'index.php?customers=$matches[1]&panel=$matches[2]&partner=$matches[3]',
                 'top'
             );
         }
@@ -276,41 +277,7 @@
             global $post;
 
             if ($post->post_type == $this->cpt ) {
-                set_query_var('menu_params', array(
-                    'dados-pessoais' => array(
-                        'name' => 'Dados Pessoais',
-                        'icon' => 'badge',
-                    ),
-                    'modo-anfitriao' => array(
-                        'name' => 'Modo Anfitrião',
-                        'icon' => 'real_estate_agent',
-                    ),
-                    'favoritos' => array(
-                        'name' => 'Favoritos',
-                        'icon' => 'heart_check',
-                    ),
-                    'reservas' => array(
-                        'name' => 'Reservas',
-                        'icon' => 'calendar_month',
-                    ),
-                    'financeiro' => array(
-                        'name' => 'Financeiro',
-                        'icon' => 'credit_card',
-                    ),
-                    'help' => array(
-                        'name' => 'Preciso de ajuda',
-                        'icon' => 'contact_support',
-                    ),
-                    'update-pass' => array(
-                        'name' => 'Trocar senha',
-                        'icon' => 'lock_reset',
-                    ),
-                    'logout' => array(
-                        'name' => 'Sair',
-                        'icon' => 'exit_to_app',
-                        'id' => 'userLogout'
-                    ),
-                ));
+                set_query_var('menu_params', self::getMenuItems());
                 $single_template = CustomerPATH . '/templates/single-template.php';
             }
             return $single_template;

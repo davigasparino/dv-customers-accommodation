@@ -14,11 +14,10 @@
     ));
 
     $param = (!empty(get_query_var('panel'))) ? get_query_var('panel') : 'dashboard';
-    $urlPost = get_permalink();
-
+    $adminLinks = (new class { use CustomersUtils; })::getMenuItems('customer');
 ?>
     <div class="container pt-5">
-        <div class="row">
+        <div class="row gx-5">
             <div class="col-md-3 col-12">
                 <div class="card border-0">
                     <div class="card-body px-0 px-md-3">
@@ -28,10 +27,10 @@
                 <div class="card-footer px-0 px-md-3">
                     <div class="btn-group-vertical mt-3 w-100" role="group" aria-label="Vertical button group">
                         <?php
-                        $adminLinks = get_query_var('menu_params');
+
                         foreach($adminLinks as $key_link => $link_value): ?>
                             <a
-                                href="<?php echo esc_url($urlPost . '/'. $key_link); ?>"
+                                href="<?php echo esc_url(get_permalink() . '/'. $key_link); ?>"
                                 class="<?php echo ($param === $key_link) ? 'active' : ''; ?> btn btn-outline-dark d-flex align-items-lg-center"
                                 <?php if(isset($link_value['id'])): ?>
                                 id="<?php echo esc_html($link_value['id']); ?>"

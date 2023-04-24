@@ -1,14 +1,13 @@
 <?php
-    include(CustomerPATH . '/templates/parts/message_form.php');
     $userFields = get_query_var('userFields');
     $username = (isset($userFields, $userFields['userfields'], $userFields['userfields']['name'])) ? $userFields['userfields']['name'] : '';
     $userEmail = (isset($userFields, $userFields['userfields'], $userFields['userfields']['email'])) ? $userFields['userfields']['email'] : '';
     $lastname = (isset($userFields, $userFields['userfields'], $userFields['userfields']['lastname'])) ? $userFields['userfields']['lastname'] : '';
 
-    $adminLinks = get_query_var('menu_params');
     $param = (!empty(get_query_var('panel'))) ? get_query_var('panel') : 'dashboard';
 
-    include(CustomerPATH . '/templates/parts/single/part_title.php');
+    (new class { use CustomersUtils; })::getTitle('customer', $param);
+    include(CustomerPATH . '/templates/parts/message_form.php');
 ?>
 
 <form id="userContainer" class="row g-3 needs-validation" novalidate>

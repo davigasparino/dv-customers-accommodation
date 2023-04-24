@@ -1,6 +1,6 @@
     <?php
     $userFields = get_query_var('userFields');
-    include(CustomerPATH . '/templates/parts/single/part_title.php');
+    (new class { use CustomersUtils; })::getTitle('customer', get_query_var('panel'));
     ?>
     <div class="row">
         <div class="col-md-6 col-12 offset-md-3 mt-md-5">

@@ -1,1 +1,1 @@
-<?php include(CustomerPATH . '/templates/parts/single/part_title.php');
+<?php (new class { use CustomersUtils; })::getTitle('customer', $param);
