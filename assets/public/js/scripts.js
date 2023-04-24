@@ -51,26 +51,21 @@ const loginSend = (isValid) => {
 
     fetch(Customer_js.url + '?' + params)
         .then(response => {
-            if(response.ok) return response.json();
+            if(response.ok) {
+                console.log('response.ok => ', response.ok);
+                return response.json();
+            }
         })
         .then(json => {
             let MessageContainer = document.querySelector('.login-message-status div');
             if(MessageContainer){
                 utils.feedbackMessage(MessageContainer, json);
             }
-
+            console.log('json.url 1 => ', json.url);
             if(json.status && json.status === 'ok'){
                 window.location.href = json.url;
+                console.log('json.url 2 => ', json.url);
             }
-        })
-        .then(function (response) {
-            return response.text();
-        })
-        .then(function (data) {
-            isScriptsLoading = false;
-        })
-        .catch( () => {
-            isScriptsLoading = false;
         })
         .finally(() => {
             btnLoader.classList.add("d-none");

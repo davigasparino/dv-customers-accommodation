@@ -5,13 +5,13 @@ $userEmail = (isset($userFields, $userFields['userfields'], $userFields['userfie
 $lastname = (isset($userFields, $userFields['userfields'], $userFields['userfields']['lastname'])) ? $userFields['userfields']['lastname'] : '';
 ?>
 
-    <?php $profileImage = (isset($userFields, $userFields['ID'])) ? get_the_post_thumbnail_url($userFields['ID']) : null; ?>
+    <?php $profileImage = (isset($userFields, $userFields['ID'])) ? get_the_post_thumbnail_url($userFields['ID'], 'medium') : null; ?>
     <?php $profileImage = (isset($profileImage) && !empty($profileImage)) ? $profileImage : CustomerURL . 'assets/public/img/image-default.jpg'; ?>
     <h5 class="card-title"><?php echo esc_attr($username); ?></h5>
     <figure class="figure position-relative p-50 w-100">
         <img src="<?php echo esc_url($profileImage); ?>" class="figure-img img-fluid m-0 image-profile" id="profileUserImage" alt="..." data-bs-toggle="modal" data-bs-target="#viewImageMd">
         <div class="hstack gap-3 position-absolute bottom-0 end-0 ">
-            <button type="button" class="btn btn-sm btn-outline-secondary border-0 p-0 m-0" data-bs-toggle="modal" data-bs-target="#updateImageMd">
+            <button type="button" class="btn btn-sm btn-outline-dark orange-500 border-0 p-0 m-0 d-flex" data-bs-toggle="modal" data-bs-target="#updateImageMd">
                 <span class="material-symbols-outlined">image_search</span>
             </button>
         </div>
@@ -50,9 +50,8 @@ $lastname = (isset($userFields, $userFields['userfields'], $userFields['userfiel
                     <h1 class="modal-title fs-5" id="viewImageMdLabel">Imagem do perfil</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <img id="viewImageProfile" src="<?php echo esc_url($profileImage); ?>" class="img-fluid" alt="...">
-
+                <div class="modal-body d-flex justify-content-center">
+                    <img id="viewImageProfile" src="<?php echo esc_url(get_the_post_thumbnail_url($userFields['ID'], 'full')); ?>" class="img-fluid" alt="...">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-outline-secondary border-0 p-0 m-0" data-bs-toggle="modal" data-bs-target="#updateImageMd">

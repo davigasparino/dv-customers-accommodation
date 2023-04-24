@@ -23,6 +23,7 @@
                             name="user_phones_ddi_<?php echo esc_attr($customer_phones['code']) ?>"
                             id="user_phones_ddi_<?php echo esc_attr($customer_phones['code']) ?>"
                             aria-label="DDI"
+                            maxlength="3"
                             value="<?php echo esc_attr($ddi); ?>"
                             <?php echo esc_attr($itemRequire); ?>
                         >
@@ -38,6 +39,7 @@
                             name="user_phones_ddd_<?php echo esc_attr($customer_phones['code']) ?>"
                             id="user_phones_ddd_<?php echo esc_attr($customer_phones['code']) ?>"
                             aria-label="DDD"
+                            maxlength="3"
                             value="<?php echo esc_attr($ddd); ?>"
                             <?php echo esc_attr($itemRequire); ?>
                         >
@@ -53,6 +55,7 @@
                             name="user_phones_number_<?php echo esc_attr($customer_phones['code']) ?>"
                             id="user_phones_number_<?php echo esc_attr($customer_phones['code']) ?>"
                             aria-label="Número"
+                            maxlength="11"
                             value="<?php echo esc_attr($number); ?>"
                             <?php echo esc_attr($itemRequire); ?>
                         >

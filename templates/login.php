@@ -1,7 +1,7 @@
 
 <?php if(isset($_SESSION['customer_loggedin'])): ?>
     <div class="btn-group dropstart">
-        <button class="dropdown-toggle border-0 bg-transparent" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
+        <a class="border-0 bg-transparent" type="button" href="<?php echo esc_url(get_permalink($_SESSION['customer_id'])); ?>">
             <?php
             $userProfileImage = get_the_post_thumbnail_url($_SESSION['customer_id'], 'thumbnail');
             if($userProfileImage):?>
@@ -9,10 +9,7 @@
             <?php else: ?>
                 <span class="material-symbols-outlined">account_circle</span>
             <?php endif; ?>
-        </button>
-        <ul class="dropdown-menu" id="nav-user-panel">
-            <li><a class="dropdown-item" href="<?php echo esc_url(get_permalink($_SESSION['customer_id'])); ?>"><?php echo esc_html(array_shift(get_post_meta($_SESSION['customer_id'], 'user_fields'))['name']); ?></a></li>
-        </ul>
+        </a>
     </div>
 
 <?php else: ?>

@@ -42,6 +42,7 @@
             add_action('wp_footer', function(){ include(CustomerPATH . '/templates/parts/form_login.php'); });
             add_action('init', function(){ session_start(); });
             add_filter('script_loader_tag', array($this, 'AddAttrType') , 10, 3);
+            add_action( 'init', array($this, 'CustomersRewriteTags') );
         }
 
         /**
@@ -123,6 +124,7 @@
                 'supports'            => array( 'title', 'thumbnail' ),
                 'hierarchical'        => false,
                 'public'              => false,
+                'rewrite' => array( 'slug' => 'customers' ),
                 'show_ui'             => true,
                 'show_in_menu'        => true,
                 'show_in_nav_menus'   => true,
@@ -207,6 +209,19 @@
         }
 
         /**
+         * Customers Rewrite Tags
+         */
+        public function CustomersRewriteTags() : void
+        {
+            add_rewrite_tag( '%panel%', '([^/]*)' );
+            add_rewrite_rule(
+                '^customers/([^/]*)/([^/]*)/?$',
+                'index.php?customers=$matches[1]&panel=$matches[2]',
+                'top'
+            );
+        }
+
+        /**
          * Customers Panel Template
          *
          * @param $page_template
@@ -261,6 +276,41 @@
             global $post;
 
             if ($post->post_type == $this->cpt ) {
+                set_query_var('menu_params', array(
+                    'dados-pessoais' => array(
+                        'name' => 'Dados Pessoais',
+                        'icon' => 'badge',
+                    ),
+                    'modo-anfitriao' => array(
+                        'name' => 'Modo Anfitrião',
+                        'icon' => 'real_estate_agent',
+                    ),
+                    'favoritos' => array(
+                        'name' => 'Favoritos',
+                        'icon' => 'heart_check',
+                    ),
+                    'reservas' => array(
+                        'name' => 'Reservas',
+                        'icon' => 'calendar_month',
+                    ),
+                    'financeiro' => array(
+                        'name' => 'Financeiro',
+                        'icon' => 'credit_card',
+                    ),
+                    'help' => array(
+                        'name' => 'Preciso de ajuda',
+                        'icon' => 'contact_support',
+                    ),
+                    'update-pass' => array(
+                        'name' => 'Trocar senha',
+                        'icon' => 'lock_reset',
+                    ),
+                    'logout' => array(
+                        'name' => 'Sair',
+                        'icon' => 'exit_to_app',
+                        'id' => 'userLogout'
+                    ),
+                ));
                 $single_template = CustomerPATH . '/templates/single-template.php';
             }
             return $single_template;
@@ -408,8 +458,9 @@
                 ));
             }
 
+            $pass = (isset($_REQUEST['user_pass'])) ? sanitize_text_field($_REQUEST['user_pass']) : null;
+
             if(isset($pass)){
-                $pass = (isset($_REQUEST['user_pass'])) ? sanitize_text_field($_REQUEST['user_pass']) : null;
                 $confirm_pass = (isset($_REQUEST['confirm_user_pass'])) ? sanitize_text_field($_REQUEST['confirm_user_pass']) : null;
                 if(isset($pass) && strlen($pass) < 1 ){
                     return wp_send_json(array(
@@ -494,7 +545,8 @@
                     $postID = wp_insert_post(array(
                         'post_type' => $this->cpt,
                         'post_title' => $email,
-                        'post_content' => $name,
+                        'post_content' => $name . ' ' . $lastname,
+                        'post_name' => $name,
                         'post_status' => 'publish'
                     ));
                     if($postID){
@@ -567,7 +619,7 @@
 
             return wp_send_json(array(
                 'message' => 'Upload efetuado com sucesso',
-                'image' => get_the_post_thumbnail_url($postID),
+                'image' => get_the_post_thumbnail_url($postID, 'medium'),
                 'class' => 'alert,alert-success',
                 'id' => $postID
             ));

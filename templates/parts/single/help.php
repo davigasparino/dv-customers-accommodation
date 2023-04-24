@@ -1,0 +1,1 @@
+<?php include(CustomerPATH . '/templates/parts/single/part_title.php');
