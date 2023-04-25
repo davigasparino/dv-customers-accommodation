@@ -12,5 +12,4 @@ $partinerLinks = (new class { use CustomersUtils; })::getMenuItems('partner');?>
         </a>
     <?php endforeach;?>
 </div>
-
-<?php include(CustomerPATH . '/templates/parts/single/'.$partner.'.php'); ?>
+<?php include(CustomerPATH . 'templates/parts/single/'.$partner.'.php'); ?>

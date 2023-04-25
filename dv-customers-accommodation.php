@@ -14,5 +14,5 @@ define('CustomerPATH', plugin_dir_path(__FILE__));
 require CustomerPATH . '/inc/Autoload.php';
 $autoload = new Autoload();
 
-$users_theme = new CustomerCPT();
-$users_theme->init();
+new CustomerCPT();
+new Establishments();

@@ -12,23 +12,31 @@
          */
         public function __construct( )
         {
-
-        }
-
-        /**
-         * Init Customer Object
-         */
-        public function Init() : void
-        {
             self::HooksAndFilters();
         }
+
 
         /**
          * Hooks And Filters
          */
         public function HooksAndFilters() : void
         {
-            add_action('init', array($this, 'CustomPostType'));
+            add_action('init', function(){
+                $attr = array(
+                    'cpt' => $this->cpt,
+                    'singular' => 'Cliente',
+                    'plural' => 'Clientes',
+                );
+                $args = array(
+                    'supports' => array( 'title', 'thumbnail' ),
+                    'menu_icon'           => 'dashicons-groups',
+                    'rewrite' => array( 'slug' => 'customers' ),
+                );
+                $labels = array(
+
+                );
+                self::CustomPostType($attr, $args, $labels);
+            });
             add_action('fm_post_'.$this->cpt, array($this, 'MetaboxCustomerCPT'));
             add_filter( 'theme_page_templates', array($this, 'HookTemplatesPageList'), 10, 4 );
             add_filter( 'page_template', array($this, 'CustomersPanelTemplate') );
@@ -55,7 +63,7 @@
          */
         public function AddAttrType($tag, $handle, $src) : string
         {
-            if ( 'customers-cpt-scripts' !== $handle && 'single-scripts' !== $handle ) {
+            if ( 'stablishments-cpt-scripts' !== $handle && 'customers-cpt-scripts' !== $handle && 'single-scripts' !== $handle ) {
                 return $tag;
             }
             $tag = '<script type="module" src="' . esc_url( $src ) . '"></script>';
@@ -89,55 +97,6 @@
         public function CustomerEnqueueStyles() : void
         {
             wp_enqueue_style('customers-cpt-css', CustomerURL . '/assets/public/css/style.css');
-        }
-
-        /**
-         * Register Custom Post Type Customers
-         */
-        public function CustomPostType() : void
-        {
-            $singular = 'Cliente';
-            $plural = 'Clientes';
-
-            $labels = array(
-                'name' => __( $plural ),
-                'singular_name' => __( $singular ),
-                'menu_name'           => __( $plural ),
-                'parent_item_colon'   => __( $singular . ' Ascendente' ),
-                'all_items'           => __( 'Todos os ' .$plural ),
-                'view_item'           => __( 'Ver ' . $singular ),
-                'add_new_item'        => __( 'Adicionar ' . $singular ),
-                'add_new'             => __( 'Adicionar novo' ),
-                'edit_item'           => __( 'Editar ' . $singular ),
-                'update_item'         => __( 'Atualizar ' . $singular ),
-                'search_items'        => __( 'Buscar ' . $singular ),
-                'not_found'           => __( $singular . ' não encontrado' ),
-                'not_found_in_trash'  => __( $singular . ' não encontrado no Lixo' ),
-            );
-
-            $args = array(
-                'has_archive' => false,
-                'show_in_rest' => false,
-                'label'               => __( $plural ),
-                'description'         => __( $plural . ' Business' ),
-                'labels'              => $labels,
-                'supports'            => array( 'title', 'thumbnail' ),
-                'hierarchical'        => false,
-                'public'              => false,
-                'rewrite' => array( 'slug' => 'customers' ),
-                'show_ui'             => true,
-                'show_in_menu'        => true,
-                'show_in_nav_menus'   => true,
-                'show_in_admin_bar'   => true,
-                'menu_position'       => 5,
-                'can_export'          => true,
-                'exclude_from_search' => false,
-                'publicly_queryable'  => true,
-                'capability_type'     => 'post',
-                'menu_icon'           => 'dashicons-groups',
-            );
-
-            register_post_type($this->cpt, $args,);
         }
 
         /**
@@ -215,9 +174,10 @@
         {
             add_rewrite_tag( '%panel%', '([^/]*)' );
             add_rewrite_tag( '%partner%', '([^/]*)' );
+            add_rewrite_tag( '%action%', '([^/]*)' );
             add_rewrite_rule(
-                '^customers/([^/]*)/([^/]*)/?([^/]*)/?$',
-                'index.php?customers=$matches[1]&panel=$matches[2]&partner=$matches[3]',
+                '^customers/([^/]*)/([^/]*)/?([^/]*)/?([^/]*)/?$',
+                'index.php?customers=$matches[1]&panel=$matches[2]&partner=$matches[3]&action=$matches[4]',
                 'top'
             );
         }
