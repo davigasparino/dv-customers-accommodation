@@ -8,6 +8,108 @@ utils.on(document, 'submit', '#stablishmentdata', function(event) {
     let isValid  = utils.checkFormIsValid(event.target, event);
     updateDataEstablisment(isValid, event.target);
 });
+//
+// utils.on(document, 'change', '#establishmentImage', function(event){
+//     getImgData();
+// });
+//
+// utils.on(document, 'click', '#debugImages', function(event){
+//     getImgDataDebug();
+// });
+//
+// utils.on(document, 'click', '.delete-image', function(event){
+//     event.target.parentElement.parentElement.remove();
+//     deleteImgArrItem(parseInt(event.target.parentElement.dataset.id));
+// });
+//
+//
+// const deleteImgArrItem = (item) => {
+//     console.log('ITEM => ', item);
+//     AllImages.splice(item, 1);
+//     //clearIndexList();
+// }
+//
+// const clearIndexList = () => {
+//     let imageOrderList = document.querySelectorAll('#uploadImagesView li');
+//     for(let i=0; i<imageOrderList.length; i++){
+//         imageOrderList[i].dataset.key = i;
+//         document.querySelectorAll('#uploadImagesView li button')[i].dataset.id = i;
+//     }
+// }
+//
+// const imgPreview = document.getElementById("uploadImagesView");
+//
+// var AllImages = [];
+//
+// const getImgDataDebug = () => {
+    // let chooseFile = document.getElementById("establishmentImage");
+    // const files = chooseFile.files;
+    //
+    // console.log('File => ', chooseFile.files.length);
+    // if (files) {
+    //     for(var i=0; i<chooseFile.files.length; i++){
+    //         let fileReader = new FileReader();
+    //         fileReader.readAsDataURL(files[i]);
+    //         fileReader.addEventListener("load", function () {
+    //             imgPreview.style.display = "block";
+    //             console.log('result => ', this.result);
+    //         });
+    //     }
+    //
+    // }
+
+    //clearIndexList();
+    // console.log('DEBUG => ', AllImages);
+    //console.log('DEBUG => ', typeof AllImages);
+    // console.log('DEBUG => ', AllImages.length);
+// }
+//
+// var count_image = 0;
+// const ImagesPreviewArr = [];
+//
+// const getImgData = () => {
+//     let chooseFile = document.getElementById("establishmentImage");
+//     const files = chooseFile.files;
+//
+//     if (files) {
+//         for(let i=0; i<chooseFile.files.length; i++){
+//             AllImages.push(files[i]);
+//
+//         }
+//     }
+//
+//     mountPreviewImages(files, parseInt(chooseFile.files.length));
+// }
+//
+// const mountPreviewImages = (files, total) => {
+//     for(let i=0; i<total; i++){
+//         let fileReader = new FileReader();
+//         fileReader.readAsDataURL(files[i]);
+//         fileReader.addEventListener("load", function () {
+//             ImagesPreviewArr[count_image] = this.result;
+//             // imgPreview.style.display = "flex";
+//             // imgPreview.insertAdjacentHTML("beforeend", '<li data-key="'+count_image+'">'+count_image+' : <img class="img-thumbnail" src="' + this.result + '" /><button class="btn btn-outline-danger border-0 delete-image" data-id="'+count_image+'"><span class="material-symbols-outlined">delete</span></button></li>');
+//             // count_image++;
+//         });
+//     }
+//     return getImagesPreview(total);
+// }
+//
+// const getImagesPreview = async (total) => {
+//
+//     console.log('get images PREVIEW => ', ImagesPreviewArr);
+//     console.log('get images PREVIEW => ', typeof ImagesPreviewArr);
+//     console.log('get images PREVIEW => ', ImagesPreviewArr[0]);
+//
+//     for (let i=0; i < total; i++){
+//
+//         imgPreview.style.display = "flex";
+//         imgPreview.insertAdjacentHTML("beforeend", '<li data-key="'+i+'">'+i+' : <img class="img-thumbnail" src="' + ImagesPreviewArr[i] + '" /><button class="btn btn-outline-danger border-0 delete-image" data-id="'+i+'"><span class="material-symbols-outlined">delete</span></button></li>');
+//     }
+//     slist(document.getElementById("uploadImagesView"));
+// }
+
+const editor1 = new RichTextEditor("#inp_editor1");
 
 const updateDataEstablisment = (isValidForm, formstablishmentdata) => {
 
@@ -24,30 +126,48 @@ const updateDataEstablisment = (isValidForm, formstablishmentdata) => {
 
     isLoading = true;
 
-    let params = {
-        action: 'updateEstablisment',
-        nounce: Establisment_js.nounce,
-        url: Establisment_js.Establisment_ajax
-    };
+    let getFormData = new FormData(formstablishmentdata);
 
     let countPhones = document.querySelectorAll('.formPhones');
     if(countPhones){
-        params['countPhones'] = countPhones.length;
+        getFormData.append( "countPhones", countPhones.length);
     }
 
     let countAddress = document.querySelectorAll('.formAddress');
     if(countAddress){
-        params['countAddress'] = countAddress.length;
+        getFormData.append( "countAddress", countAddress.length);
     }
 
-    let getFormData = new FormData(formstablishmentdata);
-    for (let [key, value] of getFormData) {
-        params[key] = value;
-    }
+    getFormData.append( "action", "updateEstablisment");
+    getFormData.append( "nounce", Establisment_js.nounce);
+    getFormData.append( "url", Establisment_js.Establisment_ajax);
 
-    params = utils.objectScriptsToUrlParams(params);
+    getFormData.append( "coust", document.getElementById('coust').value);
+    getFormData.append( "email", document.getElementById('email').value);
+    getFormData.append( "description", document.getElementById('inp_editor1').value);
 
-    fetch(Establisment_js.url + '?' + params)
+
+
+    //let imageOrderList = document.querySelectorAll('#uploadImagesView li');
+
+    // let TheFiles = AllImages;
+    // console.log('quantidade de imagens => ', TheFiles.length);
+    // if (TheFiles) {
+    //     for(var i=0; i < TheFiles.length; i++){
+    //         if(imageOrderList[i] && imageOrderList[i].dataset && imageOrderList[i].dataset.key){
+    //             console.log('sync AllImages => ', AllImages[imageOrderList[i].dataset.key]);
+    //             getFormData.append("Images_"+i, AllImages[imageOrderList[i].dataset.key]);
+    //         }
+    //     }
+    // }
+    //
+    // getFormData.append("TotalImages", AllImages.length);
+
+    const ctrl = new AbortController()    // timeout
+    setTimeout(() => ctrl.abort(), 5000);
+
+    fetch(Establisment_js.url,
+        {method: "POST", body: getFormData, signal: ctrl.signal})
         .then(response => {
             if(response.ok) return response.json();
         })
@@ -70,4 +190,58 @@ const updateDataEstablisment = (isValidForm, formstablishmentdata) => {
         .finally(() => {
             btnLoader.classList.add("d-none");
         });
+}
+
+const slist = async (target) => {
+        // (A) SET CSS + GET ALL LIST ITEMS
+    target.classList.add("slist");
+    let items = target.getElementsByTagName("li"), current = null;
+    console.log('TARGET ===> ', items);
+    // (B) MAKE ITEMS DRAGGABLE + SORTABLE
+    for (let i of items) {
+        // (B1) ATTACH DRAGGABLE
+        i.draggable = true;
+
+        // (B2) DRAG START - YELLOW HIGHLIGHT DROPZONES
+        i.ondragstart = e => {
+            current = i;
+            for (let it of items) {
+                if (it != current) { it.classList.add("hint"); }
+            }
+        };
+
+        // (B3) DRAG ENTER - RED HIGHLIGHT DROPZONE
+        i.ondragenter = e => {
+            if (i != current) { i.classList.add("active"); }
+        };
+
+        // (B4) DRAG LEAVE - REMOVE RED HIGHLIGHT
+        i.ondragleave = () => i.classList.remove("active");
+
+        // (B5) DRAG END - REMOVE ALL HIGHLIGHTS
+        i.ondragend = () => { for (let it of items) {
+            it.classList.remove("hint");
+            it.classList.remove("active");
+        }};
+
+        // (B6) DRAG OVER - PREVENT THE DEFAULT "DROP", SO WE CAN DO OUR OWN
+        i.ondragover = e => e.preventDefault();
+
+        // (B7) ON DROP - DO SOMETHING
+        i.ondrop = e => {
+            e.preventDefault();
+            if (i != current) {
+                let currentpos = 0, droppedpos = 0;
+                for (let it=0; it<items.length; it++) {
+                    if (current == items[it]) { currentpos = it; }
+                    if (i == items[it]) { droppedpos = it; }
+                }
+                if (currentpos < droppedpos) {
+                    i.parentNode.insertBefore(current, i.nextSibling);
+                } else {
+                    i.parentNode.insertBefore(current, i);
+                }
+            }
+        };
+    }
 }

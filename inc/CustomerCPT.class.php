@@ -175,9 +175,10 @@
             add_rewrite_tag( '%panel%', '([^/]*)' );
             add_rewrite_tag( '%partner%', '([^/]*)' );
             add_rewrite_tag( '%action%', '([^/]*)' );
+            add_rewrite_tag( '%postid%', '([^/]*)' );
             add_rewrite_rule(
-                '^customers/([^/]*)/([^/]*)/?([^/]*)/?([^/]*)/?$',
-                'index.php?customers=$matches[1]&panel=$matches[2]&partner=$matches[3]&action=$matches[4]',
+                '^customers/([^/]*)/([^/]*)/?([^/]*)/?([^/]*)/?([^/]*)/?$',
+                'index.php?customers=$matches[1]&panel=$matches[2]&partner=$matches[3]&action=$matches[4]&postid=$matches[5]',
                 'top'
             );
         }

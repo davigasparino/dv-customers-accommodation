@@ -5,11 +5,11 @@ $userEmail = (isset($userFields, $userFields['userfields'], $userFields['userfie
 $lastname = (isset($userFields, $userFields['userfields'], $userFields['userfields']['lastname'])) ? $userFields['userfields']['lastname'] : '';
 ?>
 
-    <?php $profileImage = (isset($userFields, $userFields['ID'])) ? get_the_post_thumbnail_url($userFields['ID'], 'medium') : null; ?>
-    <?php $profileImage = (isset($profileImage) && !empty($profileImage)) ? $profileImage : CustomerURL . 'assets/public/img/image-default.jpg'; ?>
+    <?php $profileImageBoll = (isset($userFields, $userFields['ID'])) ? get_the_post_thumbnail_url($userFields['ID'], 'medium') : null; ?>
+    <?php $profileImage = (isset($profileImageBoll) && !empty($profileImageBoll)) ? $profileImageBoll : CustomerURL . 'assets/public/img/image-default.jpg'; ?>
     <h5 class="card-title"><?php echo esc_attr($username); ?></h5>
     <figure class="figure position-relative p-50 w-100">
-        <img src="<?php echo esc_url($profileImage); ?>" class="figure-img img-fluid m-0 image-profile" id="profileUserImage" alt="..." data-bs-toggle="modal" data-bs-target="#viewImageMd">
+        <img src="<?php echo esc_url($profileImage); ?>" class="figure-img img-fluid m-0 image-profile" id="profileUserImage" alt="..." <?php if($profileImageBoll): ?> data-bs-toggle="modal" data-bs-target="#viewImageMd" <?php endif; ?> >
         <div class="hstack gap-3 position-absolute bottom-0 end-0 ">
             <button type="button" class="btn btn-sm btn-outline-dark orange-500 border-0 p-0 m-0 d-flex" data-bs-toggle="modal" data-bs-target="#updateImageMd">
                 <span class="material-symbols-outlined">image_search</span>
