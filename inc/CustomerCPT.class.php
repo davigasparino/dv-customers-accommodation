@@ -541,9 +541,22 @@
             require_once (ABSPATH . 'wp-admin/includes/file.php');
             require_once (ABSPATH . 'wp-admin/includes/media.php');
 
-            $imgID = media_handle_upload('photo', $postID);
+            $imageID = wp_handle_upload($_FILES['photo'], array('test_form' => FALSE));
 
-            set_post_thumbnail($postID,$imgID);
+            $attachment = array(
+                'guid'           => $imageID['url'],
+                'post_mime_type' => $_FILES['photo']['type'],
+                'post_title'     => $_FILES['photo']['name'],
+                'post_content'   => '',
+                'post_status'    => 'inherit'
+            );
+            $attachmentID = wp_insert_attachment( $attachment, $imageID['file'], $postID );
+            if ( !is_wp_error( $attachmentID )) {
+                $attach_meta = wp_generate_attachment_metadata( $attachmentID, $imageID['file'] );
+                wp_update_attachment_metadata( $attachmentID, $attach_meta);
+            }
+
+            set_post_thumbnail($postID, $attachmentID);
 
             return wp_send_json(array(
                 'message' => 'Upload efetuado com sucesso',

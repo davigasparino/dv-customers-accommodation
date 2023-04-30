@@ -61,7 +61,7 @@
 
 
         const ctrl = new AbortController()    // timeout
-        setTimeout(() => ctrl.abort(), 5000);
+        setTimeout(() => ctrl.abort(), 10000);
 
         try {
             fetch(Customer_js.url,

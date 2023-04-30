@@ -188,6 +188,10 @@ class Establishments {
                     return self::updateEstablisment();
                     break;
 
+                case 'uploadImages':
+                    return self::uploadImages();
+                    break;
+
                 default;
                     break;
             }
@@ -351,6 +355,42 @@ class Establishments {
             'url' => $urlreturn.'/form/'.$stablishmentID,
             'id' => $stablishmentID
         ));
+    }
+
+    public function uploadImages()
+    {
+        $nonce = isset($_REQUEST['nounce']) ? sanitize_text_field($_REQUEST['nounce']) : '';
+        if ( ! wp_verify_nonce( $nonce, 'Establisment_nounce' ) ) {
+            return wp_send_json(new WP_Error('wperro', 'Nounce Inválido'));
+        }
+        $postID = (isset($_REQUEST['postID'])) ? sanitize_text_field($_REQUEST['postID']) : null;
+        require_once (ABSPATH . 'wp-admin/includes/image.php');
+        require_once (ABSPATH . 'wp-admin/includes/file.php');
+        require_once (ABSPATH . 'wp-admin/includes/media.php');
+
+        $imageID = wp_handle_upload($_FILES['establishmentImages'], array('test_form' => FALSE));
+        $attachment = array(
+            'guid'           => $imageID['url'],
+            'post_mime_type' => $_FILES['establishmentImages']['type'],
+            'post_title'     => $_FILES['establishmentImages']['name'],
+            'post_content'   => '',
+            'post_status'    => 'inherit'
+        );
+
+        $attachmentID = wp_insert_attachment( $attachment, $imageID['file'], $postID );
+        if ( !is_wp_error( $attachmentID )) {
+            $attach_meta = wp_generate_attachment_metadata( $attachmentID, $imageID['file'] );
+            wp_update_attachment_metadata( $attachmentID, $attach_meta);
+        }
+
+        $attachmentImages = array_shift(get_post_meta($postID, 'estab_img'));
+        $attachmentImages[] = array(
+            'img' => $attachmentID,
+        );
+
+        update_post_meta( $postID, 'estab_img', $attachmentImages );
+
+        die('Imagens atualizadas com sucesso!');
     }
 
     /**

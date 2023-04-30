@@ -1,5 +1,6 @@
 <?php
     $IDPost = get_query_var('postid') ?? null;
+
     $stab_fields = (get_post_meta($IDPost, 'estab_fields')) ? array_shift(get_post_meta($IDPost, 'estab_fields')) : null;
     $stab_address = (get_post_meta($IDPost, 'estab_address')) ? array_shift(get_post_meta($IDPost, 'estab_address')) : null;
     $estab_phones = (get_post_meta($IDPost, 'estab_phones')) ? array_shift(get_post_meta($IDPost, 'estab_phones')) : null;
@@ -16,6 +17,9 @@
     $neighborhood = isset($stab_address['neighborhood']) ? $stab_address['neighborhood'] : '';
     $cep = isset($stab_address['cep']) ? $stab_address['cep'] : '';
 
+    if($IDPost){
+        include(CustomerPATH . '/templates/parts/stablishments/form_images.php');
+    }
     include(CustomerPATH . '/templates/parts/message_form.php');
 ?>
 <form id="stablishmentdata" class="row g-3 mt-3 needs-validation" method="post" enctype="multipart/form-data" novalidate>
