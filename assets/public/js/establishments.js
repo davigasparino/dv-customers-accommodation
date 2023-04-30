@@ -80,106 +80,83 @@ function recursiveExecRequest(theImageFiles, formdata){
     formdata.append("nounce", Establisment_js.nounce);
     formdata.append("url", Establisment_js.Establisment_ajax);
 
-    console.log('count_image => ', count_image);
+    let statusMessage = document.querySelector('.status-bar-items .status-message');
+    statusMessage.innerText = (count_image+1) +'/'+theImageFiles.length;
+
+    let uploadMessage = document.querySelector('.status-bar-items .upload-messages');
+    uploadMessage.innerText = 'Iniciando upload da imagem '+(count_image+1);
+
+
+    console.log('contador => ', count_image);
+    console.log('theImageFiles.length => ', theImageFiles.length);
+
     var request = new XMLHttpRequest();
     if (theImageFiles) {
          request.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                console.log('on ready change => ', this.responseText);
-                console.log('Status COntador => ',count_image + ' - ' + theImageFiles.length);
-
                 count_image++;
                 if (count_image < theImageFiles.length) {
-                    console.log('Aguarde, em 4 segundo será chamada a função novamente');
                     setTimeout(function () {
                         recursiveExecRequest(theImageFiles, formdata);
-                    },2000);
+                    },1000);
                 }else{
                     setTimeout(function () {
-                        console.log('Contador zerado');
+                        uploadMessage.innerText = 'Finalizado.';
                         count_image = 0;
-                    },6000);
+                    },4000);
+                }
+
+                if(this.response){
+                    let imgContainer = document.querySelector('.images-container');
+                    let imgURL = JSON.parse(this.response).image_url;
+                    let img = document.createElement('img');
+                    img.classList.add('gallery-img', 'img-thumbnail','thumbnail','m-2');
+                    img.src = imgURL;
+
+                    imgContainer.appendChild(img);
                 }
             }
         };
+
+        // let dvProgress = document.createElement("div");
+        // dvProgress.classList.add('progress-wrapper', 'progress', 'mt-5', 'p-0');
+        //
+        // let dvBar = document.createElement("div");
+        // dvBar.classList.add('progress','progress-bar','progress-bar-striped','progress-bar-animated','bg-dark');
+        // dvBar.setAttribute("id", "progressBar"+count_image);
+        //
+        // dvProgress.appendChild(dvBar);
+        //
+        // let vidProgress = document.querySelector('.status-bar-items');
+        // vidProgress.appendChild(dvProgress);
+
+        let progressBar = document.getElementById('progress-bar-images');
+        progressBar.style.width = '0';
+        progressBar.innerText = 0 + '%';
 
         request.upload.addEventListener('progress', function (e) {
             var file1Size = theImageFiles[count_image].size;
 
             if (e.loaded <= file1Size) {
+                uploadMessage.innerText = 'Upload da imagem '+(count_image+1)+' em andamento.';
+
                 var percent = Math.round(e.loaded / file1Size * 100);
-                $('#progress-bar-file1').width(percent + '%').html(percent + '%');
+                progressBar.style.width = percent + '%';
+                progressBar.innerText = percent + '%';
             }
 
             if (e.loaded == e.total) {
-                $('#progress-bar-file1').width(100 + '%').html(100 + '%');
+                uploadMessage.innerText = 'Finalizando upload imagem '+(count_image+1)+', por favor aguarde mais um pouco.';
+                progressBar.style.width = '100%';
+                progressBar.innerText = 100 + '%';
             }
         });
 
         request.open('post', '/stablishment-ajax');
-        //request.open('post', Establisment_js.Establisment_ajax);
         request.timeout = 945000;
         request.send(formdata);
     }
 }
-
-
-    // let chooseFile = document.getElementById("establishmentImage");
-    // const files = chooseFile.files;
-    // if (files) {
-    //     // let theForm = document.getElementById('establishmentPictures');
-    //     // console.log('theForm', theForm);
-    //     //
-    //     let getFormData = new FormData(theForm);
-    //     getFormData.append( "action", "uploadImages");
-    //     getFormData.append( "nounce", Establisment_js.nounce);
-    //     getFormData.append( "url", Establisment_js.Establisment_ajax);
-    //
-    //     let ctrl = new AbortController()    // timeout
-    //     setTimeout(() => ctrl.abort(), 5000);
-    //
-    //     fetch(Establisment_js.url,
-    //         {method: "POST", body: getFormData, signal: ctrl.signal})
-    //         .then(response => {
-    //             if(response.ok) return response.json();
-    //         })
-    //         .then(json => {
-    //             let MessageContainer = document.querySelector('.form-message-status div');
-    //             if(MessageContainer){
-    //                 utils.feedbackMessage(MessageContainer, json);
-    //             }
-    //
-    //             if(json.status && json.status === 'ok'){
-    //                 window.location.href = json.url;
-    //             }
-    //         })
-    //         .then(function (data) {
-    //             isLoading = false;
-    //         })
-    //         .catch( () => {
-    //             isLoading = false;
-    //         })
-    //         .finally(() => {
-    //             btnLoader.classList.add("d-none");
-    //         });
-        //
-        //
-        //
-        // for(let i=0; i<chooseFile.files.length; i++){
-        //     let fileReader = new FileReader();
-        //     fileReader.readAsDataURL(files[i]);
-        //     fileReader.addEventListener("load", function () {
-        //         //ImagesPreviewArr[count_image] = this.result;
-        //         // imgPreview.style.display = "flex";
-        //         // imgPreview.insertAdjacentHTML("beforeend", '<li data-key="'+count_image+'">'+count_image+' : <img class="img-thumbnail" src="' + this.result + '" /><button class="btn btn-outline-danger border-0 delete-image" data-id="'+count_image+'"><span class="material-symbols-outlined">delete</span></button></li>');
-        //         // count_image++;
-        //         console.log('this -> ', this.result);
-        //     });
-        // }
-    //}
-
-
-
 
 const mountPreviewImages = (files, total) => {
     for(let i=0; i<total; i++){

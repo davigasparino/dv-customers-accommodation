@@ -17,31 +17,21 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <style>
-                    .progress-wrapper {
-                        width:100%;
-                    }
-                    .progress-wrapper .progress {
-                        width:0%;
-                        padding:5px 0px 5px 0px;
-                    }
-                </style>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
-
                 <div class="container">
-                    <div class="row">
-                        <div class="progress-wrapper progress" role="progressbar" aria-label="Animated striped example" aria-valuemin="0" aria-valuemax="100">
-                            <div id="progress-bar-file1" class="progress progress-bar progress-bar-striped progress-bar-animated bg-dark"></div>
+                    <div class="row status-bar-items">
+                        <div class="display-1 status-message text-center"></div>
+                        <p class="upload-messages mt-4 text-center mb-0"></p>
+                        <div class="progress-wrapper progress p-0">
+                            <div class="progress progress-bar progress-bar-striped progress-bar-animated bg-dark" id="progress-bar-images" ></div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12 d-flex flex-wrap">
+                    <div class="row mt-3">
+                        <div class="col-12 d-flex flex-wrap images-container">
                             <?php if($IDPost): ?>
                             <?php $getAllImages = array_shift(get_post_meta($IDPost, 'estab_img'));
                             if($getAllImages):
                             foreach ($getAllImages as $theImg): ?>
-<!--                                --><?php //echo wp_get_attachment_image( $theImg['img'], 'your-custom-size' ); ?>
-                                <img src="<?php echo esc_url(wp_get_attachment_image_url($theImg['img'], 'medium')); ?>" style="width: 120px; height: 80px; object-fit: cover;" class="img-thumbnail thumbnail m-2">
+                                <img src="<?php echo esc_url(wp_get_attachment_image_url($theImg['img'], 'medium')); ?>" class="gallery-img img-thumbnail thumbnail m-2">
                             <?php endforeach; ?>
                             <?php endif; ?>
                             <?php endif; ?>
@@ -49,8 +39,6 @@
 
                     </div>
                 </div>
-
-
 
                 <form id="establishmentPictures" class="row g-3 mt-3 needs-validation" method="post" enctype="multipart/form-data" novalidate>
                     <div class="input-group mb-3">
@@ -62,9 +50,7 @@
                         <ul id="uploadImagesView"></ul>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
             </div>
         </div>
     </div>

@@ -76,4 +76,10 @@
     pointer-events: none;
 }
 
+.gallery-img{
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+}
+
 

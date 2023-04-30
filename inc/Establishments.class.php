@@ -390,7 +390,10 @@ class Establishments {
 
         update_post_meta( $postID, 'estab_img', $attachmentImages );
 
-        die('Imagens atualizadas com sucesso!');
+        return wp_send_json(array(
+            'status' => 'ok',
+            'image_url' => wp_get_attachment_image_url($attachmentID, 'thumbnail'),
+        ));
     }
 
     /**
