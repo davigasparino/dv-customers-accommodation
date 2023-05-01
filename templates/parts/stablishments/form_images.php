@@ -32,19 +32,19 @@
                             </div>
                         </div>
                         <div class="col-12 d-flex flex-wrap images-container">
-                            <?php if($IDPost): ?>
-                            <?php $getAllImages = array_shift(get_post_meta($IDPost, 'estab_img'));
-                            if($getAllImages):?>
                             <ul class="d-flex flex-wrap p-0 m-0">
-                            <?php foreach ($getAllImages as $imgKey => $theImg): ?>
-                                <li class="list-group" data-position="<?php echo esc_attr($imgKey); ?>" data-id="<?php echo esc_attr($theImg['img']); ?>">
-                                    <button><span class="material-symbols-outlined">cancel</span></button>
-                                    <img src="<?php echo esc_url(wp_get_attachment_image_url($theImg['img'], 'medium')); ?>" class="gallery-img img-thumbnail thumbnail m-2">
-                                </li>
-                            <?php endforeach; ?>
+                            <?php if($IDPost): ?>
+                                <?php $getAllImages = array_shift(get_post_meta($IDPost, 'estab_img'));
+                                if($getAllImages):?>
+                                    <?php foreach ($getAllImages as $imgKey => $theImg): ?>
+                                        <li class="list-group" data-position="<?php echo esc_attr($imgKey); ?>" data-id="<?php echo esc_attr($theImg['img']); ?>">
+                                            <button><span class="material-symbols-outlined">cancel</span></button>
+                                            <img src="<?php echo esc_url(wp_get_attachment_image_url($theImg['img'], 'medium')); ?>" class="gallery-img img-thumbnail thumbnail m-2">
+                                        </li>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            <?php endif; ?>
                             </ul>
-                            <?php endif; ?>
-                            <?php endif; ?>
                         </div>
                         <div class="col-12 position-relative  z-1">
                             <form id="establishmentPictures" class="row g-3 mt-3 needs-validation" method="post" enctype="multipart/form-data" novalidate>
@@ -59,6 +59,12 @@
 
 
 
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-dark d-flex justify-content-center align-items-center" type="button" data-bs-dismiss="modal">
+                       <span class="material-symbols-outlined">check_small</span>
+                        Finalizar
+                </button>
             </div>
         </div>
     </div>

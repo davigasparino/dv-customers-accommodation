@@ -16,11 +16,11 @@
     $param = (!empty(get_query_var('panel'))) ? get_query_var('panel') : 'dashboard';
     $adminLinks = (new class { use CustomersUtils; })::getMenuItems('customer');
 ?>
-    <div class="container pt-5">
+    <div class="container-fluid pt-5">
         <div class="row gx-5">
             <div class="col-md-3 col-12">
                 <div class="card border-0">
-                    <div class="card-body px-0 px-md-3">
+                    <div class="card-body py-0 px-0 px-md-3">
                         <?php include(CustomerPATH . '/templates/parts/single/form_image.php'); ?>
                     </div>
                 </div>

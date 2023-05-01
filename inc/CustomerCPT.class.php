@@ -528,6 +528,9 @@
 
             $postID = (isset($_REQUEST['postID'])) ? sanitize_text_field($_REQUEST['postID']) : null;
 
+            $deleteOldImage = get_post_thumbnail_id($postID);
+            wp_delete_attachment( (int) $deleteOldImage, true);
+
             if(!$postID){
                 return wp_send_json(array(
                     'message' => 'Campo email não pode ser vazio',

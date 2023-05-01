@@ -52,7 +52,7 @@
 
         let formData = new FormData();
         let photo = document.getElementById('profileImage').files[0];
-        let postID = document.getElementById('userid').value;
+        let postID = document.getElementById('image_user_id').value;
 
         formData.append("action", 'UploadProfileImage');
         formData.append("postID", postID);

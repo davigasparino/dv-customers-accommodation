@@ -5,10 +5,10 @@ $userEmail = (isset($userFields, $userFields['userfields'], $userFields['userfie
 $lastname = (isset($userFields, $userFields['userfields'], $userFields['userfields']['lastname'])) ? $userFields['userfields']['lastname'] : '';
 ?>
 
-    <?php $profileImageBoll = (isset($userFields, $userFields['ID'])) ? get_the_post_thumbnail_url($userFields['ID'], 'medium') : null; ?>
+    <?php $profileImageBoll = (isset($userFields, $userFields['ID'])) ? get_the_post_thumbnail_url($userFields['ID'], 'large') : null; ?>
     <?php $profileImage = (isset($profileImageBoll) && !empty($profileImageBoll)) ? $profileImageBoll : CustomerURL . 'assets/public/img/image-default.jpg'; ?>
-    <h5 class="card-title"><?php echo esc_attr($username); ?></h5>
-    <figure class="figure position-relative p-50 w-100">
+    <h5 class="card-title">Olá, <?php echo esc_attr($username); ?></h5>
+    <figure class="figure position-relative p-50 mb-0 w-100">
         <img src="<?php echo esc_url($profileImage); ?>" class="figure-img img-fluid m-0 image-profile" id="profileUserImage" alt="..." <?php if($profileImageBoll): ?> data-bs-toggle="modal" data-bs-target="#viewImageMd" <?php endif; ?> >
         <div class="hstack gap-3 position-absolute bottom-0 end-0 ">
             <button type="button" class="btn btn-sm btn-outline-dark orange-500 border-0 p-0 m-0 d-flex" data-bs-toggle="modal" data-bs-target="#updateImageMd">
@@ -30,6 +30,7 @@ $lastname = (isset($userFields, $userFields['userfields'], $userFields['userfiel
                     <form id="image-file-form" class="g-3" action="" method="post" enctype="multipart/form-data">
                         <div class="input-group mb-3">
                             <input type="file" class="form-control" name="profileImage" id="profileImage" required>
+                            <input type="hidden" id="image_user_id" name="image_user_id" value="<?php echo esc_attr($_SESSION['customer_id']); ?>">
                             <label class="input-group-text pt-0 pb-0 m-0" for="profileImage">
                                 <button class="btn btn-small p-0 m-0 border-0" type="submit" id="updateUserImage">
                                     <span class="material-symbols-outlined">cloud_upload</span>

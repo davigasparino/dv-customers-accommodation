@@ -388,7 +388,14 @@ class Establishments {
                 'img' => $p[1]
             );
         }
+
+        $imagesOrderer = array_values($imagesOrderer);
         update_post_meta( $postID, 'estab_img', $imagesOrderer );
+
+        return wp_send_json(array(
+            'status' => 'ok',
+            'message' => 'Lista reordenada',
+        ));
     }
 
     public function deleteImage()
@@ -402,10 +409,19 @@ class Establishments {
         $imageId = (isset($_REQUEST['imageId'])) ? sanitize_text_field($_REQUEST['imageId']) : null;
         $imgPosition = (isset($_REQUEST['imgPosition'])) ? sanitize_text_field($_REQUEST['imgPosition']) : null;
 
-        $getIMages = array_shift(get_post_meta($postID, 'estab_img'));
+        $getIMages = get_post_meta($postID, 'estab_img')[0];
+        unset($getIMages[(int) $imgPosition]);
 
-        unset($getIMages[$imgPosition]);
+        $getIMages = array_values($getIMages);
+
         update_post_meta( $postID, 'estab_img', $getIMages );
+
+        wp_delete_attachment( (int) $imageId, true);
+
+        return wp_send_json(array(
+            'status' => 'ok',
+            'message' => 'Imagem deletada com sucesso.',
+        ));
     }
 
     /**

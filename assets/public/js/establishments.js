@@ -222,10 +222,22 @@ const savePosition = () => {
             isLoading = false;
         })
         .finally(() => {
+            reindexPositions();
             loadingContainer.classList.add('d-none');
             loadingContainer.classList.remove('d-flex');
         });
 }
+
+const reindexPositions = () => {
+    let getPositions = document.querySelectorAll('.images-container ul li');
+    let i = 0;
+    getPositions.forEach(element => {
+        element.dataset.position = i;
+        i++;
+    });
+}
+
+reindexPositions();
 
 const deleteImage = (imagePosition, imageId, item) => {
     let loadingContainer = document.querySelector('.images-loader');
@@ -242,6 +254,7 @@ const deleteImage = (imagePosition, imageId, item) => {
 
     params = utils.objectScriptsToUrlParams(params);
 
+    item.remove();
     fetch(Establisment_js.url + '?' + params)
         .then(function (response) {
             return response.text();
@@ -255,7 +268,7 @@ const deleteImage = (imagePosition, imageId, item) => {
         .finally(() => {
             loadingContainer.classList.add('d-none');
             loadingContainer.classList.remove('d-flex');
-            item.remove();
+            reindexPositions();
         });
 }
 
