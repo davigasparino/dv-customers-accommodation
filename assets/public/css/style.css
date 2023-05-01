@@ -29,12 +29,6 @@
 .p-50{
     padding: 50%;
 }
-#uploadImagesView img{
-    width: 100px;
-    height: 100px;
-    object-fit: contain;
-    transition: transform .4s ease-in-out;
-}
 
 .slist {
     list-style: none;
@@ -80,6 +74,33 @@
     width: 120px;
     height: 80px;
     object-fit: cover;
+}
+
+.images-container ul li button span{
+    font-size: 18px;
+}
+.images-container ul li button span:hover{
+    color: #fff;
+}
+.images-container ul li button{
+    display: none;
+    transition: .4s ease-in-out;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: #fff;
+    border: none;
+    padding: 0;
+    margin: 0;
+    line-height: 0;
+    border-radius: 50%;
+    box-shadow: 1px 2px 4px 0;
+}
+.images-container ul li button:hover{
+    background-color: #c00;
+}
+.images-container ul li:hover button{
+    display: block;
 }
 
 

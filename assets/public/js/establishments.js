@@ -12,68 +12,25 @@ utils.on(document, 'submit', '#stablishmentdata', function(event) {
 utils.on(document, 'change', '#establishmentImage', function(event){
     getImgData();
 });
-//
-// utils.on(document, 'click', '#debugImages', function(event){
-//     getImgDataDebug();
-// });
-//
-// utils.on(document, 'click', '.delete-image', function(event){
-//     event.target.parentElement.parentElement.remove();
-//     deleteImgArrItem(parseInt(event.target.parentElement.dataset.id));
-// });
-//
-//
-// const deleteImgArrItem = (item) => {
-//     console.log('ITEM => ', item);
-//     AllImages.splice(item, 1);
-//     //clearIndexList();
-// }
-//
-// const clearIndexList = () => {
-//     let imageOrderList = document.querySelectorAll('#uploadImagesView li');
-//     for(let i=0; i<imageOrderList.length; i++){
-//         imageOrderList[i].dataset.key = i;
-//         document.querySelectorAll('#uploadImagesView li button')[i].dataset.id = i;
-//     }
-// }
-//
-// const imgPreview = document.getElementById("uploadImagesView");
-//
-// var AllImages = [];
-//
-// const getImgDataDebug = () => {
-    // let chooseFile = document.getElementById("establishmentImage");
-    // const files = chooseFile.files;
-    //
-    // console.log('File => ', chooseFile.files.length);
-    // if (files) {
-    //     for(var i=0; i<chooseFile.files.length; i++){
-    //         let fileReader = new FileReader();
-    //         fileReader.readAsDataURL(files[i]);
-    //         fileReader.addEventListener("load", function () {
-    //             imgPreview.style.display = "block";
-    //             console.log('result => ', this.result);
-    //         });
-    //     }
-    //
-    // }
 
-    //clearIndexList();
-    // console.log('DEBUG => ', AllImages);
-    //console.log('DEBUG => ', typeof AllImages);
-    // console.log('DEBUG => ', AllImages.length);
-// }
-//
+utils.on(document, 'click', '.images-container ul li button', function(event){
+    let TheItem = event.target.parentNode.parentNode;
+    deleteImage(TheItem.dataset.position, TheItem.dataset.id, TheItem);
+});
+
 var count_image = 0;
-// const ImagesPreviewArr = [];
-//
-const getImgData = (callback) => {
+
+const getImgData = () => {
     var formdata = new FormData();
     let theImage = document.getElementById('establishmentImage');
     recursiveExecRequest(theImage.files, formdata)
 }
 
 function recursiveExecRequest(theImageFiles, formdata){
+    let loadingContainer = document.querySelector('.images-loader');
+    loadingContainer.classList.remove('d-none');
+    loadingContainer.classList.add('d-flex');
+
     formdata.append('establishmentImages', theImageFiles[count_image]);
     formdata.append("action", "uploadImages");
     formdata.append("postID", document.getElementById('postID').value);
@@ -86,10 +43,6 @@ function recursiveExecRequest(theImageFiles, formdata){
     let uploadMessage = document.querySelector('.status-bar-items .upload-messages');
     uploadMessage.innerText = 'Iniciando upload da imagem '+(count_image+1);
 
-
-    console.log('contador => ', count_image);
-    console.log('theImageFiles.length => ', theImageFiles.length);
-
     var request = new XMLHttpRequest();
     if (theImageFiles) {
          request.onreadystatechange = function() {
@@ -101,34 +54,37 @@ function recursiveExecRequest(theImageFiles, formdata){
                     },1000);
                 }else{
                     setTimeout(function () {
+                        loadingContainer.classList.add('d-none');
+                        loadingContainer.classList.remove('d-flex');
                         uploadMessage.innerText = 'Finalizado.';
                         count_image = 0;
                     },4000);
                 }
 
                 if(this.response){
-                    let imgContainer = document.querySelector('.images-container');
+                    let imgContainer = document.querySelector('.images-container ul');
+                    let imgLI = document.createElement('li');
                     let imgURL = JSON.parse(this.response).image_url;
                     let img = document.createElement('img');
+                    let imgLiButton = document.createElement('button');
+                    let imgButtonSpan = document.createElement('span');
+                    imgButtonSpan.classList.add('material-symbols-outlined');
+                    imgButtonSpan.innerText = 'cancel';
+                    imgLiButton.appendChild(imgButtonSpan);
+                    imgLI.appendChild(imgLiButton);
+                    imgLI.classList.add('list-group');
+                    imgLI.dataset.position = document.querySelectorAll('.images-container ul li').length;
+                    imgLI.dataset.id = JSON.parse(this.response).image_id;
                     img.classList.add('gallery-img', 'img-thumbnail','thumbnail','m-2');
                     img.src = imgURL;
-
-                    imgContainer.appendChild(img);
+                    imgLI.appendChild(img);
+                    imgContainer.appendChild(imgLI);
+                    let modalPictures = document.querySelector('#pictureImages div.modal-body.pt-0');
+                    modalPictures.scrollTo(0, modalPictures.scrollHeight);
+                    slist(document.querySelector(".images-container"));
                 }
             }
         };
-
-        // let dvProgress = document.createElement("div");
-        // dvProgress.classList.add('progress-wrapper', 'progress', 'mt-5', 'p-0');
-        //
-        // let dvBar = document.createElement("div");
-        // dvBar.classList.add('progress','progress-bar','progress-bar-striped','progress-bar-animated','bg-dark');
-        // dvBar.setAttribute("id", "progressBar"+count_image);
-        //
-        // dvProgress.appendChild(dvBar);
-        //
-        // let vidProgress = document.querySelector('.status-bar-items');
-        // vidProgress.appendChild(dvProgress);
 
         let progressBar = document.getElementById('progress-bar-images');
         progressBar.style.width = '0';
@@ -156,34 +112,6 @@ function recursiveExecRequest(theImageFiles, formdata){
         request.timeout = 945000;
         request.send(formdata);
     }
-}
-
-const mountPreviewImages = (files, total) => {
-    for(let i=0; i<total; i++){
-        let fileReader = new FileReader();
-        fileReader.readAsDataURL(files[i]);
-        fileReader.addEventListener("load", function () {
-            ImagesPreviewArr[count_image] = this.result;
-            // imgPreview.style.display = "flex";
-            // imgPreview.insertAdjacentHTML("beforeend", '<li data-key="'+count_image+'">'+count_image+' : <img class="img-thumbnail" src="' + this.result + '" /><button class="btn btn-outline-danger border-0 delete-image" data-id="'+count_image+'"><span class="material-symbols-outlined">delete</span></button></li>');
-            // count_image++;
-        });
-    }
-    return getImagesPreview(total);
-}
-
-const getImagesPreview = async (total) => {
-
-    console.log('get images PREVIEW => ', ImagesPreviewArr);
-    console.log('get images PREVIEW => ', typeof ImagesPreviewArr);
-    console.log('get images PREVIEW => ', ImagesPreviewArr[0]);
-
-    for (let i=0; i < total; i++){
-
-        imgPreview.style.display = "flex";
-        imgPreview.insertAdjacentHTML("beforeend", '<li data-key="'+i+'">'+i+' : <img class="img-thumbnail" src="' + ImagesPreviewArr[i] + '" /><button class="btn btn-outline-danger border-0 delete-image" data-id="'+i+'"><span class="material-symbols-outlined">delete</span></button></li>');
-    }
-    slist(document.getElementById("uploadImagesView"));
 }
 
 const editor1 = new RichTextEditor("#inp_editor1");
@@ -223,23 +151,6 @@ const updateDataEstablisment = (isValidForm, formstablishmentdata) => {
     getFormData.append( "email", document.getElementById('email').value);
     getFormData.append( "description", document.getElementById('inp_editor1').value);
 
-
-
-    //let imageOrderList = document.querySelectorAll('#uploadImagesView li');
-
-    // let TheFiles = AllImages;
-    // console.log('quantidade de imagens => ', TheFiles.length);
-    // if (TheFiles) {
-    //     for(var i=0; i < TheFiles.length; i++){
-    //         if(imageOrderList[i] && imageOrderList[i].dataset && imageOrderList[i].dataset.key){
-    //             console.log('sync AllImages => ', AllImages[imageOrderList[i].dataset.key]);
-    //             getFormData.append("Images_"+i, AllImages[imageOrderList[i].dataset.key]);
-    //         }
-    //     }
-    // }
-    //
-    // getFormData.append("TotalImages", AllImages.length);
-
     const ctrl = new AbortController()    // timeout
     setTimeout(() => ctrl.abort(), 5000);
 
@@ -269,11 +180,89 @@ const updateDataEstablisment = (isValidForm, formstablishmentdata) => {
         });
 }
 
-const slist = async (target) => {
+const savePosition = () => {
+    let loadingContainer = document.querySelector('.images-loader');
+    loadingContainer.classList.remove('d-none');
+    loadingContainer.classList.add('d-flex');
+    let allPositions = [];
+    let getPositions = document.querySelectorAll('.images-container ul li');
+    getPositions.forEach(element => {
+        allPositions.push([parseInt(element.dataset.position), parseInt(element.dataset.id)]);
+    });
+
+    let getFormData = new FormData();
+    getFormData.append( "action", "reorderImages");
+    getFormData.append( "nounce", Establisment_js.nounce);
+    getFormData.append( "url", Establisment_js.Establisment_ajax);
+    getFormData.append("postID", document.getElementById('postID').value);
+    getFormData.append("positions", JSON.stringify(allPositions));
+
+    const ctrl = new AbortController()    // timeout
+    setTimeout(() => ctrl.abort(), 5000);
+
+    fetch(Establisment_js.url,
+        {method: "POST", body: getFormData, signal: ctrl.signal})
+        .then(response => {
+            if(response.ok) return response.json();
+        })
+        .then(json => {
+            let MessageContainer = document.querySelector('.form-message-status div');
+            if(MessageContainer){
+                utils.feedbackMessage(MessageContainer, json);
+            }
+
+            if(json.status && json.status === 'ok'){
+                window.location.href = json.url;
+            }
+        })
+        .then(function (data) {
+            isLoading = false;
+        })
+        .catch( () => {
+            isLoading = false;
+        })
+        .finally(() => {
+            loadingContainer.classList.add('d-none');
+            loadingContainer.classList.remove('d-flex');
+        });
+}
+
+const deleteImage = (imagePosition, imageId, item) => {
+    let loadingContainer = document.querySelector('.images-loader');
+    loadingContainer.classList.remove('d-none');
+    loadingContainer.classList.add('d-flex');
+
+    let params = {
+        action: 'deleteImage',
+        nounce: Establisment_js.nounce,
+        postID: document.getElementById('postID').value,
+        imgPosition: imagePosition,
+        imageId: imageId
+    };
+
+    params = utils.objectScriptsToUrlParams(params);
+
+    fetch(Establisment_js.url + '?' + params)
+        .then(function (response) {
+            return response.text();
+        })
+        .then(response => {
+            if(response.ok) return response.json();
+        })
+        .catch(function () {
+
+        })
+        .finally(() => {
+            loadingContainer.classList.add('d-none');
+            loadingContainer.classList.remove('d-flex');
+            item.remove();
+        });
+}
+
+const slist = (target) => {
         // (A) SET CSS + GET ALL LIST ITEMS
     target.classList.add("slist");
     let items = target.getElementsByTagName("li"), current = null;
-    console.log('TARGET ===> ', items);
     // (B) MAKE ITEMS DRAGGABLE + SORTABLE
     for (let i of items) {
         // (B1) ATTACH DRAGGABLE
@@ -318,7 +307,10 @@ const slist = async (target) => {
                 } else {
                     i.parentNode.insertBefore(current, i);
                 }
+                savePosition();
             }
         };
     }
 }
+
+slist(document.querySelector(".images-container"));

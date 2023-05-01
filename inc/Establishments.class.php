@@ -192,6 +192,14 @@ class Establishments {
                     return self::uploadImages();
                     break;
 
+                case 'reorderImages':
+                    return self::reorderImages();
+                    break;
+
+                case 'deleteImage':
+                    return self::deleteImage();
+                    break;
+
                 default;
                     break;
             }
@@ -293,44 +301,6 @@ class Establishments {
             ));
         }
 
-//        require_once (ABSPATH . 'wp-admin/includes/image.php');
-//        require_once (ABSPATH . 'wp-admin/includes/file.php');
-//        require_once (ABSPATH . 'wp-admin/includes/media.php');
-//
-//        $imagesArr = array();
-//        foreach ($_FILES['profileImage'] as $imgkey => $images){
-//            foreach ($images as $theImgKey => $theimg){
-//                $imagesArr[$theImgKey][$imgkey] = $theimg;
-//            }
-//        }
-//
-//        $imagesArr = array();
-//        for($i=0; $i < $_REQUEST['TotalImages']; $i++){
-//            $imagesArr[] = $_FILES['Images_'.$i];
-//        }
-//
-//        $attachmentImages = array();
-//        foreach ($imagesArr as $imgUploads){
-//            $imageID = wp_handle_upload($imgUploads, array('test_form' => FALSE));
-//            $attachment = array(
-//                'guid'           => $imageID['url'],
-//                'post_mime_type' => $imageID['type'],
-//                'post_title'     => $imgUploads['name'],
-//                'post_content'   => '',
-//                'post_status'    => 'inherit'
-//            );
-//
-//            $attachmentID = wp_insert_attachment( $attachment, $imageID['url'], 1 );
-//
-//            $attachmentImages[] = array(
-//                'img' => $attachmentID,
-//            );
-//        }
-//
-//        update_post_meta( $stablishmentID, 'estab_img', $attachmentImages );
-//
-//        set_post_thumbnail($stablishmentID, $imageID);
-
         $term_id = wp_insert_term($userID, 'partner_user', array(
             'description' => '',
             'slug' => '',
@@ -357,13 +327,19 @@ class Establishments {
         ));
     }
 
-    public function uploadImages()
+    /**
+     * Upload Images
+     *
+     * @return string
+     */
+    public function uploadImages() : string
     {
         $nonce = isset($_REQUEST['nounce']) ? sanitize_text_field($_REQUEST['nounce']) : '';
         if ( ! wp_verify_nonce( $nonce, 'Establisment_nounce' ) ) {
             return wp_send_json(new WP_Error('wperro', 'Nounce Inválido'));
         }
         $postID = (isset($_REQUEST['postID'])) ? sanitize_text_field($_REQUEST['postID']) : null;
+
         require_once (ABSPATH . 'wp-admin/includes/image.php');
         require_once (ABSPATH . 'wp-admin/includes/file.php');
         require_once (ABSPATH . 'wp-admin/includes/media.php');
@@ -393,7 +369,43 @@ class Establishments {
         return wp_send_json(array(
             'status' => 'ok',
             'image_url' => wp_get_attachment_image_url($attachmentID, 'thumbnail'),
+            'image_id' => $attachmentID,
         ));
+    }
+
+    public function reorderImages()
+    {
+        $nonce = isset($_REQUEST['nounce']) ? sanitize_text_field($_REQUEST['nounce']) : '';
+        if ( ! wp_verify_nonce( $nonce, 'Establisment_nounce' ) ) {
+            return wp_send_json(new WP_Error('wperro', 'Nounce Inválido'));
+        }
+        $postID = (isset($_REQUEST['postID'])) ? sanitize_text_field($_REQUEST['postID']) : null;
+        $positions = (isset($_REQUEST['positions'])) ? $_REQUEST['positions'] : null;
+
+        $imagesOrderer = array();
+        foreach (json_decode($positions) as $p){
+            $imagesOrderer[$p[0]] = array(
+                'img' => $p[1]
+            );
+        }
+        update_post_meta( $postID, 'estab_img', $imagesOrderer );
+    }
+
+    public function deleteImage()
+    {
+        $nonce = isset($_REQUEST['nounce']) ? sanitize_text_field($_REQUEST['nounce']) : '';
+        if ( ! wp_verify_nonce( $nonce, 'Establisment_nounce' ) ) {
+            return wp_send_json(new WP_Error('wperro', 'Nounce Inválido'));
+        }
+
+        $postID = (isset($_REQUEST['postID'])) ? sanitize_text_field($_REQUEST['postID']) : null;
+        $imageId = (isset($_REQUEST['imageId'])) ? sanitize_text_field($_REQUEST['imageId']) : null;
+        $imgPosition = (isset($_REQUEST['imgPosition'])) ? sanitize_text_field($_REQUEST['imgPosition']) : null;
+
+        $getIMages = array_shift(get_post_meta($postID, 'estab_img'));
+
+        unset($getIMages[$imgPosition]);
+        update_post_meta( $postID, 'estab_img', $getIMages );
     }
 
     /**
