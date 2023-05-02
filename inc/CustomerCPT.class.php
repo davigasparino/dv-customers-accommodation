@@ -112,6 +112,8 @@
                     'name' => new Fieldmanager_TextField('Nome'),
                     'lastname' => new Fieldmanager_TextField('sobrenome'),
                     'email' => new Fieldmanager_TextField('E-mail'),
+                    'cpf' => new Fieldmanager_TextField('cpf'),
+                    'rg' => new Fieldmanager_TextField('rg'),
                 ),
             ));
             $fmUser->add_meta_box('Dados de Cadastro', $this->cpt, 'normal', 'high');
@@ -362,6 +364,8 @@
 
             $postID = (isset($_REQUEST['userid'])) ? sanitize_text_field($_REQUEST['userid']) : null;
 
+            $user_cpf = (isset($_REQUEST['user_cpf'])) ?  sanitize_text_field($_REQUEST['user_cpf']) : null;
+            $user_rg = (isset($_REQUEST['user_rg'])) ?  sanitize_text_field($_REQUEST['user_rg']) : null;
             $name = (isset($_REQUEST['user_name'])) ?  sanitize_text_field($_REQUEST['user_name']) : null;
             if(!$name){
                 return wp_send_json(array(
@@ -413,7 +417,9 @@
             $args = array(
                 'name' => $name,
                 'lastname' => $lastname,
-                'email' => $email
+                'email' => $email,
+                'user_rg' => $user_rg,
+                'user_cpf' => $user_cpf
             );
 
             $countAddress = (isset($_REQUEST['countAddress'])) ?  sanitize_text_field($_REQUEST['countAddress']) : 0;
