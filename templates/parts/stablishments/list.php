@@ -19,8 +19,7 @@
                 <?php
                 $postDatas = array_shift(get_post_meta(get_the_ID(), 'estab_fields'));
                 $images = array_shift(get_post_meta(get_the_ID(), 'estab_img'));
-                if($images):
-                ?>
+                if($images): ?>
                 <div id="carouselList<?php echo esc_attr(get_the_ID()); ?>" class="carousel slide">
                     <div class="carousel-indicators">
                         <?php $imgCount = 0; foreach ($images as $image_key => $image): if($imgCount > 4) continue; ?>
