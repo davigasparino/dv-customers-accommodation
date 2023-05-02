@@ -7,16 +7,13 @@
     $itemRequire = ($establishment_phones['code'] !== 'XXX') ? 'required' : '';
     $itemRequireClass = ($establishment_phones['code'] === 'XXX') ? 'required' : '';
 ?>
-<div class="col-md-6 <?php echo esc_attr($establishment_phones['class']) ?> mb-3">
-    <div class="card p-0">
-        <div class="card-header">
-
-        </div>
-        <div class="card-body">
+<div class="col-12 <?php echo esc_attr($establishment_phones['class']) ?> mb-2">
+    <div class="card border-top-0 rounded-0 border-start-0 border-end-0 p-0 bg-transparent mb-5">
+        <div class="card-body border-0 px-0 text-end">
             <div class="row">
                 <div class="col-md-3 mb-3">
-                    <label for="user_phones_ddi_<?php echo esc_attr($establishment_phones['code']) ?>" class="form-label">DDI</label>
-                    <div class="input-group">
+                    <div class="input-group input-group-lg py-3">
+                        <span class="input-group-text">DDI</span>
                         <input
                             type="text"
                             class="form-control <?php echo esc_attr($itemRequireClass); ?>"
@@ -31,8 +28,8 @@
                 </div>
 
                 <div class="col-md-3 mb-3">
-                    <label for="user_phones_ddd_<?php echo esc_attr($establishment_phones['code']) ?>" class="form-label">DDD</label>
-                    <div class="input-group">
+                    <div class="input-group input-group-lg py-3">
+                        <span class="input-group-text">DDD</span>
                         <input
                             type="text"
                             class="form-control <?php echo esc_attr($itemRequireClass); ?>"
@@ -47,8 +44,8 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label for="user_phones_number_<?php echo esc_attr($establishment_phones['code']) ?>" class="form-label">Número</label>
-                    <div class="input-group">
+                    <div class="input-group input-group-lg py-3">
+                        <span class="input-group-text">Número</span>
                         <input
                             type="text"
                             class="form-control <?php echo esc_attr($itemRequireClass); ?>"
@@ -63,9 +60,8 @@
                 </div>
 
             </div>
-        </div>
-        <div class="card-footer text-body-secondary d-flex justify-content-end">
-            <button class="btn btn-outline-dark removePhones p-0 d-flex justify-content-center align-items-center border-0" type="button">
+
+            <button class="btn btn-outline-dark removePhones p-0 border-0" type="button">
                 <span class="material-symbols-outlined p-2">delete</span>
             </button>
         </div>

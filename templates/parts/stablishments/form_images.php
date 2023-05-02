@@ -2,9 +2,12 @@
 
 <div class="container">
     <div class="row">
-        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#pictureImages">
-            <span class="material-symbols-outlined">add_photo_alternate</span>
-        </button>
+        <div class="col-12 d-flex align-items-center justify-content-center">
+            <button type="button" class="btn btn-outline-dark btn-lg d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#pictureImages">
+                <span class="material-symbols-outlined">add_photo_alternate</span> Imagens
+            </button>
+        </div>
+
     </div>
 </div>
 

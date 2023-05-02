@@ -104,5 +104,39 @@
 .images-container ul li:hover button{
     display: block;
 }
+.col-cms-left::after{
+    content: '';
+    position: absolute;
+    bottom: -22px;
+    display: block;
+    left: -1.5rem;
+    width: calc(100% + 1.5rem);
+    height: 22px;
+    background-color: #fff;
+}
 
+@media only screen and (max-width: 991px) {
+    .nav-image-profile{
+        width: 30px;
+        height: 30px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+    .image-profile {
+        width: 18%;
+        height: 77%;
+        top: 2%;
+        left: 40%;
+        object-fit: cover;
+        position: absolute;
+        border-radius: 50%;
+        transition: transform .4s ease-in-out;
+        border: 3px solid #FFF;
+        box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+    }
 
+    figure.position-relative.p-50.mb-0.w-100{
+        padding: 14%;
+        padding-top: 9%;
+    }
+}

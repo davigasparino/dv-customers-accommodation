@@ -15,7 +15,7 @@
     <div class="card border-top-0 rounded-0 border-start-0 border-end-0 p-0 bg-transparent mb-5">
         <div class="card-body border-0 px-0 text-end">
             <div class="row">
-                <div class="col-md-3 mb-3">
+                <div class="col-sm-12 col-md-4 col-lg-3 mb-3">
                     <div class="input-group input-group-lg py-3">
                         <span class="input-group-text">Pais</span>
                         <input
@@ -30,9 +30,9 @@
                         >
                     </div>
                 </div>
-                <div class="col-md-2 mb-3">
+                <div class="col-sm-12 col-md-3 col-lg-2 mb-3">
                     <div class="input-group input-group-lg py-3">
-                        <span class="input-group-text">Estado</span>
+                        <span class="input-group-text">UF</span>
                         <input
                                 type="text"
                                 class="form-control <?php echo esc_attr($itemRequireClass); ?>"
@@ -45,67 +45,7 @@
                         >
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <div class="input-group input-group-lg py-3">
-                        <span class="input-group-text">Cidade</span>
-                        <input
-                                type="text"
-                                class="form-control <?php echo esc_attr($itemRequireClass); ?>"
-                                name="address_<?php echo esc_attr($customer_address['code']); ?>_city"
-                                id="address_<?php echo esc_attr($customer_address['code']); ?>_city"
-                                aria-label="Cidade"
-                                value="<?php echo esc_attr($city); ?>"
-                                maxlength="3"
-                            <?php echo esc_attr($itemRequire); ?>
-                        >
-                    </div>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <div class="input-group input-group-lg py-3">
-                        <span class="input-group-text">Bairro</span>
-                        <input
-                                type="text"
-                                class="form-control <?php echo esc_attr($itemRequireClass); ?>"
-                                name="address_<?php echo esc_attr($customer_address['code']); ?>_neighborhood"
-                                id="address_<?php echo esc_attr($customer_address['code']); ?>_neighborhood"
-                                aria-label="Bairro"
-                                value="<?php echo esc_attr($neighborhood); ?>"
-                                maxlength="70"
-                            <?php echo esc_attr($itemRequire); ?>
-                        >
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="input-group input-group-lg py-3">
-                        <span class="input-group-text">Endereço</span>
-                        <input
-                                type="text"
-                                class="form-control <?php echo esc_attr($itemRequireClass); ?>"
-                                name="address_<?php echo esc_attr($customer_address['code']); ?>_address"
-                                id="address_<?php echo esc_attr($customer_address['code']); ?>_address"
-                                aria-label="Endereço"
-                                value="<?php echo esc_attr($street); ?>"
-                                maxlength="70"
-                            <?php echo esc_attr($itemRequire); ?>
-                        >
-                    </div>
-                </div>
-                <div class="col-md-2 mb-3">
-                    <div class="input-group input-group-lg py-3">
-                        <span class="input-group-text">N°</span>
-                        <input
-                                type="text"
-                                class="form-control <?php echo esc_attr($itemRequireClass); ?>"
-                                name="address_<?php echo esc_attr($customer_address['code']); ?>_address_number"
-                                id="address_<?php echo esc_attr($customer_address['code']); ?>_address_number"
-                                aria-label="número"
-                                value="<?php echo esc_attr($address_number); ?>"
-                                maxlength="8"
-                            <?php echo esc_attr($itemRequire); ?>
-                        >
-                    </div>
-                </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-sm-12 col-md-5 col-lg-3 mb-3">
                     <div class="input-group input-group-lg py-3">
                         <span class="input-group-text">CEP</span>
                         <input
@@ -122,6 +62,67 @@
                         <button class="btn btn-outline-dark p-0 d-flex justify-content-center align-items-center" type="button" id="getCEP_<?php echo esc_attr($customer_address['code']); ?>">
                             <span class="material-symbols-outlined ps-2 pe-2">search</span>
                         </button>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-5 col-lg-4 mb-3">
+                    <div class="input-group input-group-lg py-3">
+                        <span class="input-group-text">Cidade</span>
+                        <input
+                                type="text"
+                                class="form-control <?php echo esc_attr($itemRequireClass); ?>"
+                                name="address_<?php echo esc_attr($customer_address['code']); ?>_city"
+                                id="address_<?php echo esc_attr($customer_address['code']); ?>_city"
+                                aria-label="Cidade"
+                                value="<?php echo esc_attr($city); ?>"
+                                maxlength="40"
+                            <?php echo esc_attr($itemRequire); ?>
+                        >
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-md-7 col-lg-6 mb-3">
+                    <div class="input-group input-group-lg py-3">
+                        <span class="input-group-text">Endereço</span>
+                        <input
+                                type="text"
+                                class="form-control <?php echo esc_attr($itemRequireClass); ?>"
+                                name="address_<?php echo esc_attr($customer_address['code']); ?>_address"
+                                id="address_<?php echo esc_attr($customer_address['code']); ?>_address"
+                                aria-label="Endereço"
+                                value="<?php echo esc_attr($street); ?>"
+                                maxlength="70"
+                            <?php echo esc_attr($itemRequire); ?>
+                        >
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-3 col-lg-2 mb-3">
+                    <div class="input-group input-group-lg py-3">
+                        <span class="input-group-text">N°</span>
+                        <input
+                                type="text"
+                                class="form-control <?php echo esc_attr($itemRequireClass); ?>"
+                                name="address_<?php echo esc_attr($customer_address['code']); ?>_address_number"
+                                id="address_<?php echo esc_attr($customer_address['code']); ?>_address_number"
+                                aria-label="número"
+                                value="<?php echo esc_attr($address_number); ?>"
+                                maxlength="8"
+                            <?php echo esc_attr($itemRequire); ?>
+                        >
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+                    <div class="input-group input-group-lg py-3">
+                        <span class="input-group-text">Bairro</span>
+                        <input
+                                type="text"
+                                class="form-control <?php echo esc_attr($itemRequireClass); ?>"
+                                name="address_<?php echo esc_attr($customer_address['code']); ?>_neighborhood"
+                                id="address_<?php echo esc_attr($customer_address['code']); ?>_neighborhood"
+                                aria-label="Bairro"
+                                value="<?php echo esc_attr($neighborhood); ?>"
+                                maxlength="70"
+                            <?php echo esc_attr($itemRequire); ?>
+                        >
                     </div>
                 </div>
             </div>
