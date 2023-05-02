@@ -42,6 +42,14 @@ class Establishments {
         add_action( 'init', array( $this, 'EstablismentAjaxAddRewriteRules' ), 10 );
         add_action( 'parse_request', array( $this, 'EstablismentActionRequest' ), 10, 1 );
         add_action( 'save_post', array( $this, 'ActionSaveEstablismentCPT' ), 10, 3 );
+
+        add_action( 'wp_enqueue_scripts', function() {
+            wp_enqueue_script( 'chart-js', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js', array(), true );
+        });
+
+        add_action('wp_footer', function(){
+            wp_enqueue_script( 'establishments-chart-js', CustomerURL . '/assets/public/js/establishments-chart.js', array('chart-js'), true );
+        });
     }
 
 

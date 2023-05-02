@@ -11,11 +11,7 @@
             <div class="col-12 p-4 my-4 shadow">
                 <h3 class="mb-3"><span class="material-symbols-outlined">kitesurfing</span> Descobertas das semana </h3>
                 <div id="carouselExampleCaptions" class="carousel slide">
-                    <div class="carousel-indicators" style="
-        width: 100%;
-        left: 0;
-        margin: 0;
-        bottom: -15px;">
+                    <div class="carousel-indicators" style="width: 100%;left: 0;margin: 0;bottom: -15px;">
                         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active bg-dark" aria-current="true" aria-label="Slide 1"></button>
                         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" class="bg-dark" aria-label="Slide 2"></button>
                         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" class="bg-dark" aria-label="Slide 3"></button>
@@ -172,9 +168,6 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-
-
             </div>
         </div>
     </div>
