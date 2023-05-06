@@ -91,6 +91,95 @@ trait CustomersUtils{
         return $menus;
     }
 
+    public function getTagEstablishments()
+    {
+        return array(
+            array(
+                'item' => 'wifi',
+                'icon' => 'wifi',
+            ),
+            array(
+                'item' => 'cozinha',
+                'icon' => 'flatware',
+            ),
+            array(
+                'item' => 'tv',
+                'icon' => 'tv_gen',
+            ),
+            array(
+                'item' => 'estacionamento',
+                'icon' => 'garage_home',
+            ),
+            array(
+                'item' => 'máquina de lavar',
+                'icon' => 'dishwasher_gen',
+            ),
+            array(
+                'item' => 'ar-condicionado',
+                'icon' => 'ac_unit',
+            ),
+            array(
+                'item' => 'espaço para home office',
+                'icon' => 'business_center',
+            ),
+            array(
+                'item' => 'piscina',
+                'icon' => 'pool',
+            ),
+            array(
+                'item' => 'jacuzzi',
+                'icon' => 'hot_tub',
+            ),
+            array(
+                'item' => 'ofurô',
+                'icon' => 'bath_private',
+            ),
+            array(
+                'item' => 'banheira',
+                'icon' => 'bathtub',
+            ),
+            array(
+                'item' => 'churrasqueira',
+                'icon' => 'outdoor_grill',
+            ),
+            array(
+                'item' => 'fogueira',
+                'icon' => 'local_fire_department',
+            ),
+            array(
+                'item' => 'lareira interna',
+                'icon' => 'fireplace',
+            ),
+            array(
+                'item' => 'piano',
+                'icon' => 'piano',
+            ),
+            array(
+                'item' => 'chuveiro externo',
+                'icon' => 'shower',
+            ),
+            array(
+                'item' => 'extintor de incendio',
+                'icon' => 'fire_extinguisher',
+            ),
+            array(
+                'item' => 'detector de fumança',
+                'icon' => 'detector_smoke',
+            ),
+            array(
+                'item' => 'kit de primeiros socorros',
+                'icon' => 'medical_services',
+            )
+        );
+    }
+
+    public function getIconsSelect()
+    {
+        return array(
+            'search','home','menu','close','settings','done','expand_more','check_circle','favorite','add','delete','arrow_back','star','chevron_right','logout','arrow_forward_ios','add_circle','cancel','arrow_back_ios','arrow_forward','arrow_drop_down','more_vert','check','check_box','toggle_on','grade','open_in_new','check_box_outline_blank','refresh','login','chevron_left','expand_less','radio_button_unchecked','more_horiz','apps','arrow_right_alt','radio_button_checked','download','remove','toggle_off','bolt','arrow_upward','filter_list','delete_forever','autorenew','key','arrow_downward','sort','sync','block','add_box','arrow_back_ios_new','restart_alt','menu_open','shopping_cart_checkout','expand_circle_down','backspace','arrow_circle_right','undo','done_all','arrow_right','do_not_disturb_on','open_in_full','double_arrow','manage_search','sync_alt','zoom_in','done_outline','drag_indicator','fullscreen','keyboard_double_arrow_right','star_half','settings_accessibility','ios_share','arrow_drop_up','reply','exit_to_app','unfold_more','library_add','cached','select_check_box','terminal','change_circle','disabled_by_default',
+        );
+    }
+
     /**
      * Register Custom Post Type
      *

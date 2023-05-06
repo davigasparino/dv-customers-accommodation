@@ -10,7 +10,7 @@
 ?>
 
 <form id="userContainer" class="needs-validation" novalidate>
-    <section class="container-fluid bg-light py-5">
+    <section class="container-fluid bg-light p-5">
         <div class="container">
             <?php (new class { use CustomersUtils; })::getTitle('customer', $param); ?>
             <div class="row">
@@ -43,7 +43,7 @@
         </div>
 
     </section>
-    <section class="container-fluid py-5">
+    <section class="container-fluid p-5">
         <div class="container">
             <h3 class="mb-3 mt-5"><span class="material-symbols-outlined">lock</span> Login </h3>
             <div class="row">
@@ -69,7 +69,7 @@
             </div>
         </div>
     </section>
-    <section class="container-fluid bg-light py-5">
+    <section class="container-fluid bg-light p-5">
         <div class="container">
             <h3 class="mb-3 mt-3"><span class="material-symbols-outlined me-2">signpost</span> Endereço</h3>
             <div class="row rowAddress p-0 m-0">
@@ -103,7 +103,7 @@
             </div>
         </div>
     </section>
-    <section class="container-fluid py-5">
+    <section class="container-fluid p-5">
         <div class="container">
             <h3 class="mb-3 mt-3"><span class="material-symbols-outlined me-2">mobile_friendly</span> Telefone</h3>
             <div class="row p-0 rowPhones m-0">
@@ -138,7 +138,7 @@
             </div>
         </div>
     </section>
-    <div class="container text-end">
+    <div class="container p-5 text-end">
         <?php $userID = (isset($userFields, $userFields['ID'])) ? $userFields['ID'] : ''; ?>
         <input type="hidden" name="userid" id="userid" value="<?php echo esc_attr($userID); ?>">
 

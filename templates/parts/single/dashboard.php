@@ -5,7 +5,7 @@
         </div>
     </div>
 </section>
-<section class="container-fluid py-1">
+<section class="container-fluid px-md-4 py-1">
     <div class="container">
         <div class="row">
             <div class="col-12 p-4 my-4 shadow">

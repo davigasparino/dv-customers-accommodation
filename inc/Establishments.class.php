@@ -42,13 +42,15 @@ class Establishments {
         add_action( 'init', array( $this, 'EstablismentAjaxAddRewriteRules' ), 10 );
         add_action( 'parse_request', array( $this, 'EstablismentActionRequest' ), 10, 1 );
         add_action( 'save_post', array( $this, 'ActionSaveEstablismentCPT' ), 10, 3 );
-
+        add_action('fm_term', array($this, 'TaxMetas'));
         add_action( 'wp_enqueue_scripts', function() {
             wp_enqueue_script( 'chart-js', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js', array(), true );
         });
-
         add_action('wp_footer', function(){
             wp_enqueue_script( 'establishments-chart-js', CustomerURL . '/assets/public/js/establishments-chart.js', array('chart-js'), true );
+        });
+        add_action('init', function(){
+            self::IterateTerms('partner_add');
         });
     }
 
@@ -261,20 +263,42 @@ class Establishments {
             'cep' => (isset($_REQUEST['address__cep'])) ? sanitize_text_field($_REQUEST['address__cep']) : '',
         );
 
+        if ( ! function_exists( 'post_exists' ) ) {
+            require_once( ABSPATH . 'wp-admin/includes/post.php' );
+        }
+
+        $title_stablishment = $userID . ' - ' . $name;
+        $stablishmentID = post_exists($title_stablishment, '', '', $this->cpt);
+
         $phonesArgs = array();
+        $pdCount = 0;
         foreach ($_REQUEST as $rkey => $request){
-            if(strpos($rkey, 'phone') && !strpos($rkey, 'XXX')){
+            if(strpos($rkey, 'phone') !== false && strpos($rkey, 'XXX') === false){
                 $indexNumber = filter_var($rkey, FILTER_SANITIZE_NUMBER_INT);
-                if(strpos($rkey,'ddd')){
+                if(strpos($rkey,'ddd') !== false){
                     $indexKey = 'ddd';
-                }elseif(strpos($rkey,'ddi')){
+                }elseif(strpos($rkey,'ddi') !== false){
                     $indexKey = 'ddi';
-                }else{
+                }elseif(strpos($rkey,'number') !== false){
                     $indexKey = 'number';
                 }
                 $phonesArgs[$indexNumber][$indexKey] = $request;
             }
+
+            if(strpos($rkey,'tax_partner') !== false){
+                $append = $pdCount > 0;
+                wp_set_object_terms((int) $stablishmentID, (int) sanitize_text_field($_REQUEST[$rkey]), 'partner_add', $append);
+                $pdCount++;
+            }
         }
+
+        if($pdCount === 0){
+            $postTermsPartner = get_the_terms($stablishmentID, 'partner_add');
+            if(isset($postTermsPartner, $postTermsPartner[0])){
+                wp_remove_object_terms( $stablishmentID, $postTermsPartner[0]->term_id, 'partner_add' );
+            }
+        }
+
         foreach ($phonesArgs as $allItems){
             foreach ($allItems as $item => $item_value){
                 if(empty($item_value)){
@@ -285,13 +309,6 @@ class Establishments {
                 }
             }
         }
-
-        if ( ! function_exists( 'post_exists' ) ) {
-            require_once( ABSPATH . 'wp-admin/includes/post.php' );
-        }
-
-        $title_stablishment = $userID . ' - ' . $name;
-        $stablishmentID = post_exists($title_stablishment, '', '', $this->cpt);
 
         $actionstate = 'inserido';
         if($stablishmentID){
@@ -439,6 +456,7 @@ class Establishments {
     {
         $taxonomies = array(
             'partner_user' => array('label' => 'Anfitrião'),
+            'partner_add' => array('label' => 'Adicionais'),
         );
 
         foreach ($taxonomies as $tkey => $tax){
@@ -447,6 +465,48 @@ class Establishments {
                 'label' => $tax['label'],
                 'cpt' => $this->cpt,
             ));
+        }
+    }
+
+    /**
+     * Tax Metas
+     *
+     * @throws FM_Developer_Exception
+     */
+    public function TaxMetas() : void
+    {
+        $fm_times = new Fieldmanager_Group('Informações Gerais', array(
+            'name' => 'info',
+            'serialize_data' => false,
+            'add_to_prefix' => false,
+            'children' => array(
+                'icon' => new Fieldmanager_TextField('ícone'),
+            ),
+        ));
+        $fm_times->add_term_meta_box(' ', array(
+            'partner_add',
+        ));
+    }
+
+    /**
+     * Iterate Terms
+     *
+     * @param $tax
+     */
+    public function IterateTerms($tax) : void
+    {
+        $terms = self::getTagEstablishments();
+
+        foreach ($terms as $term) {
+            $term_id = wp_insert_term($term['item'], $tax);
+
+            if (!is_wp_error($term_id)) {
+                $term_id = $term_id['term_id'];
+            } else {
+                $term_id = $term_id->error_data['term_exists'];
+            }
+
+            update_term_meta($term_id, 'icon', $term['icon']);
         }
     }
 

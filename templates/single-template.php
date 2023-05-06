@@ -5,6 +5,8 @@
         header('Location: /');
         exit;
     }
+    session_write_close();
+
     get_header();
 
     $userFields = get_post_meta(get_the_ID(), 'user_fields')[0];
@@ -17,6 +19,7 @@
     $adminLinks = (new class { use CustomersUtils; })::getMenuItems('customer');
 ?>
     <div class="container-fluid">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         <div class="row">
             <div class="col-md-12 col-lg-3 col-12 shadow position-relative col-cms-left py-4">
                 <div class="card border-0">
@@ -42,7 +45,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 col-lg-9 col-12 pe-0">
+            <div class="col-md-12 col-lg-9 col-12 p-0">
                 <?php include(CustomerPATH . '/templates/parts/single/'.$param.'.php'); ?>
             </div>
         </div>

@@ -175,6 +175,39 @@
     </section>
     <section class="container-fluid py-5">
         <div class="container">
+            <h3 class="mb-3 mt-3"><span class="material-symbols-outlined me-2">mobile_friendly</span> Adicionais</h3>
+            <div class="row p-0 rowPhones m-0">
+                <div class="col-12 p-0">
+                <?php
+                $tax_add = get_terms(array(
+                    'taxonomy'   => 'partner_add',
+                    'hide_empty' => false,
+                ));
+
+                $theTerms = !empty(get_the_terms($IDPost, 'partner_add')) ? get_the_terms($IDPost, 'partner_add') : array();
+
+                foreach ($tax_add as $add): ?>
+                    <input
+                        type="checkbox"
+                        class="btn-check"
+                        <?php echo (array_search($add, $theTerms) !== false) ? 'checked' : ''; ?>
+                        id="tax_partner_<?php echo esc_attr($add->term_id); ?>"
+                        name="tax_partner_<?php echo esc_attr($add->term_id); ?>"
+                        value="<?php echo esc_attr($add->term_id); ?>" autocomplete="off">
+                    <label class="btn btn-outline-dark mb-2 me-2 btn-sm d-inline-flex" for="tax_partner_<?php echo esc_attr($add->term_id); ?>">
+                        <?php $theIcon = get_term_meta($add->term_id, 'icon');
+                        if(isset($theIcon[0]) && !empty($theIcon[0])): ?>
+                            <span class="material-symbols-outlined me-2"><?php echo esc_html($theIcon[0]); ?></span>
+                        <?php endif; ?>
+                        <?php echo esc_html(ucwords($add->name)); ?>
+                    </label>
+                <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="container-fluid py-5">
+        <div class="container">
             <h3 class="mb-3 mt-3"><span class="material-symbols-outlined me-2">mobile_friendly</span> Telefone</h3>
             <div class="row p-0 rowPhones m-0">
                 <?php

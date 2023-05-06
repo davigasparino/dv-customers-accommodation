@@ -48,7 +48,12 @@
             add_filter( 'single_template', array($this, 'CustomerSingleTemplate'));
             add_action('dv_blank_navbar_coll', function(){include_once(CustomerPATH . '/templates/login.php');});
             add_action('wp_footer', function(){ include(CustomerPATH . '/templates/parts/form_login.php'); });
-            add_action('init', function(){ session_start(); });
+            add_action('blank-theme-header-hook', function(){
+                if( empty(session_id()) && !headers_sent()){
+                    session_start();
+                    session_write_close();
+                }
+            });
             add_filter('script_loader_tag', array($this, 'AddAttrType') , 10, 3);
             add_action( 'init', array($this, 'CustomersRewriteTags') );
         }
