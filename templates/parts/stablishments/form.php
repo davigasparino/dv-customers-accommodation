@@ -8,11 +8,13 @@
     $title = isset($stab_fields['name']) ? $stab_fields['name'] : '';
     $description = isset($stab_fields['description']) ? $stab_fields['description'] : '';
     $coust = isset($stab_fields['coust']) ? $stab_fields['coust'] : '';
+    $people_limit = isset($stab_fields['people_limit']) ? $stab_fields['people_limit'] : '';
     $email = isset($stab_fields['email']) ? $stab_fields['email'] : '';
     $country = isset($stab_address['country']) ? $stab_address['country'] : '';
     $state = isset($stab_address['state']) ? $stab_address['state'] : '';
     $city = isset($stab_address['city']) ? $stab_address['city'] : '';
     $address = isset($stab_address['address']) ? $stab_address['address'] : '';
+    $map = isset($stab_address['map']) ? $stab_address['map'] : '';
     $address_number = isset($stab_address['address_number']) ? $stab_address['address_number'] : '';
     $neighborhood = isset($stab_address['neighborhood']) ? $stab_address['neighborhood'] : '';
     $cep = isset($stab_address['cep']) ? $stab_address['cep'] : '';
@@ -31,10 +33,16 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-12 mb-4">
+        <div class="col-md-4 col-12 mb-4">
             <div class="input-group input-group-lg py-3">
                 <span class="input-group-text">Diária R$</span>
                 <input type="text" class="form-control" name="coust" id="coust" maxlength="70" aria-label="Valor" value="<?php echo esc_html($coust); ?>" >
+            </div>
+        </div>
+        <div class="col-md-4 col-12 mb-4">
+            <div class="input-group input-group-lg py-3">
+                <span class="input-group-text">Limite de Pessoas</span>
+                <input type="number" class="form-control" name="people_limit" id="people_limit" maxlength="4" aria-label="Limite" value="<?php echo esc_html($people_limit); ?>" >
             </div>
         </div>
 
@@ -173,6 +181,96 @@
             </div>
         </div>
     </section>
+
+    <?php
+    if(!empty($address)): ?>
+    <section class="container-fluid py-5">
+        <div class="container">
+            <h3 class="mb-3 mt-3"><span class="material-symbols-outlined me-2">map</span> Mapa</h3>
+            <div class="row">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="address__map" name="address__map" <?php echo esc_attr(($map) ? 'checked' : ''); ?>>
+                    <label class="form-check-label" for="address__map">
+                        Exibir mapa do estabelecimento?
+                    </label>
+                </div>
+                <?php
+                    $zoom = 5000;
+
+                    $addressComplete = $address.' '.$address_number.' '.$neighborhood.' '.$city.' '.$state.' '.$country;
+
+                    echo  '<p>'.$addressComplete.'</p>';
+                    $lng = 'br';
+
+                    $src = 'https://www.google.com/maps/embed?pb='.
+                    '!1m18'.
+                        '!1m12'.
+                            '!1m3'.
+                                '!1d'.$zoom.
+                                '!2d0'.
+                                '!3d0'.
+                            '!2m3'.
+                                '!1f0'.
+                                '!2f0'.
+                                '!3f0'.
+                            '!3m2'.
+                                '!1i1024'.
+                                '!2i768'.
+                            '!4f13.1'.
+                            '!3m3'.
+                                '!1m2'.
+                                '!1s0'.
+                                '!2s'.rawurlencode($addressComplete).
+                            '!5e0'.
+                            '!3m2'.
+                                '!1s'.$lng.
+                                '!2s'.$lng.
+                            '!4v'.time().'000'.
+                            '!5m2'.
+                                '!1s'.$lng.
+                                '!2s'.$lng;
+
+                    ?>
+                    <iframe src="<?php echo esc_attr($src); ?>" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <?php endif; ?>
+    <section class="container-fluid py-5">
+        <div class="container">
+            <h3 class="mb-3 mt-3"><span class="material-symbols-outlined me-2">house</span> Categoria</h3>
+            <div class="row p-0 rowPhones m-0">
+                <div class="col-12 p-0">
+                    <?php
+                    $tax_add = get_terms(array(
+                        'taxonomy'   => 'partner_type',
+                        'hide_empty' => false,
+                    ));
+
+                    $theTerms = !empty(get_the_terms($IDPost, 'partner_type')) ? get_the_terms($IDPost, 'partner_type') : array();
+
+                    foreach ($tax_add as $add): ?>
+                        <input
+                                type="checkbox"
+                                class="btn-check"
+                            <?php echo (array_search($add, $theTerms) !== false) ? 'checked' : ''; ?>
+                                id="tax_type_<?php echo esc_attr($add->term_id); ?>"
+                                name="tax_type_<?php echo esc_attr($add->term_id); ?>"
+                                value="<?php echo esc_attr($add->term_id); ?>" autocomplete="off">
+                        <label class="btn btn-outline-dark mb-2 me-2 btn-sm d-inline-flex" for="tax_type_<?php echo esc_attr($add->term_id); ?>">
+                            <?php $theIcon = get_term_meta($add->term_id, 'icon');
+                            if(isset($theIcon[0]) && !empty($theIcon[0])): ?>
+                                <span class="material-symbols-outlined me-2"><?php echo esc_html($theIcon[0]); ?></span>
+                            <?php endif; ?>
+                            <?php echo esc_html(ucwords($add->name)); ?>
+                        </label>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    </section>
     <section class="container-fluid py-5">
         <div class="container">
             <h3 class="mb-3 mt-3"><span class="material-symbols-outlined me-2">mobile_friendly</span> Adicionais</h3>
@@ -239,7 +337,7 @@
             </div>
         </div>
     </section>
-    
+
     <input type="hidden" name="userid" id="userid" value="<?php echo esc_attr($_SESSION['customer_id']); ?>">
     <input type="hidden" name="urlreturn" id="urlreturn" value="<?php echo esc_attr(get_permalink().get_query_var('panel').'/'.get_query_var('partner').'/'); ?>">
 

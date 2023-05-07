@@ -91,86 +91,138 @@ trait CustomersUtils{
         return $menus;
     }
 
-    public function getTagEstablishments()
+    /**
+     * get Tags Establishments
+     *
+     * @param $type
+     * @return string[][]
+     */
+    public function getTagEstablishments($type) : array
     {
-        return array(
-            array(
-                'item' => 'wifi',
-                'icon' => 'wifi',
+        $taxonomiesItems = array(
+            'partner_add' => array(
+                array(
+                    'item' => 'wifi',
+                    'icon' => 'wifi',
+                ),
+                array(
+                    'item' => 'cozinha',
+                    'icon' => 'flatware',
+                ),
+                array(
+                    'item' => 'tv',
+                    'icon' => 'tv_gen',
+                ),
+                array(
+                    'item' => 'estacionamento',
+                    'icon' => 'garage_home',
+                ),
+                array(
+                    'item' => 'máquina de lavar',
+                    'icon' => 'dishwasher_gen',
+                ),
+                array(
+                    'item' => 'ar-condicionado',
+                    'icon' => 'ac_unit',
+                ),
+                array(
+                    'item' => 'espaço para home office',
+                    'icon' => 'business_center',
+                ),
+                array(
+                    'item' => 'piscina',
+                    'icon' => 'pool',
+                ),
+                array(
+                    'item' => 'jacuzzi',
+                    'icon' => 'hot_tub',
+                ),
+                array(
+                    'item' => 'ofurô',
+                    'icon' => 'bath_private',
+                ),
+                array(
+                    'item' => 'banheira',
+                    'icon' => 'bathtub',
+                ),
+                array(
+                    'item' => 'churrasqueira',
+                    'icon' => 'outdoor_grill',
+                ),
+                array(
+                    'item' => 'fogueira',
+                    'icon' => 'local_fire_department',
+                ),
+                array(
+                    'item' => 'lareira interna',
+                    'icon' => 'fireplace',
+                ),
+                array(
+                    'item' => 'piano',
+                    'icon' => 'piano',
+                ),
+                array(
+                    'item' => 'chuveiro externo',
+                    'icon' => 'shower',
+                ),
+                array(
+                    'item' => 'extintor de incendio',
+                    'icon' => 'fire_extinguisher',
+                ),
+                array(
+                    'item' => 'detector de fumança',
+                    'icon' => 'detector_smoke',
+                ),
+                array(
+                    'item' => 'kit de primeiros socorros',
+                    'icon' => 'medical_services',
+                )
             ),
-            array(
-                'item' => 'cozinha',
-                'icon' => 'flatware',
-            ),
-            array(
-                'item' => 'tv',
-                'icon' => 'tv_gen',
-            ),
-            array(
-                'item' => 'estacionamento',
-                'icon' => 'garage_home',
-            ),
-            array(
-                'item' => 'máquina de lavar',
-                'icon' => 'dishwasher_gen',
-            ),
-            array(
-                'item' => 'ar-condicionado',
-                'icon' => 'ac_unit',
-            ),
-            array(
-                'item' => 'espaço para home office',
-                'icon' => 'business_center',
-            ),
-            array(
-                'item' => 'piscina',
-                'icon' => 'pool',
-            ),
-            array(
-                'item' => 'jacuzzi',
-                'icon' => 'hot_tub',
-            ),
-            array(
-                'item' => 'ofurô',
-                'icon' => 'bath_private',
-            ),
-            array(
-                'item' => 'banheira',
-                'icon' => 'bathtub',
-            ),
-            array(
-                'item' => 'churrasqueira',
-                'icon' => 'outdoor_grill',
-            ),
-            array(
-                'item' => 'fogueira',
-                'icon' => 'local_fire_department',
-            ),
-            array(
-                'item' => 'lareira interna',
-                'icon' => 'fireplace',
-            ),
-            array(
-                'item' => 'piano',
-                'icon' => 'piano',
-            ),
-            array(
-                'item' => 'chuveiro externo',
-                'icon' => 'shower',
-            ),
-            array(
-                'item' => 'extintor de incendio',
-                'icon' => 'fire_extinguisher',
-            ),
-            array(
-                'item' => 'detector de fumança',
-                'icon' => 'detector_smoke',
-            ),
-            array(
-                'item' => 'kit de primeiros socorros',
-                'icon' => 'medical_services',
+            'partner_type' => array(
+                array(
+                    'item' => 'Apartamento',
+                    'icon' => 'apartament',
+                ),
+                array(
+                    'item' => 'Casa',
+                    'icon' => 'house',
+                ),
+                array(
+                    'item' => 'Casa de Campo',
+                    'icon' => 'cottage',
+                ),
+                array(
+                    'item' => 'Casa de Praia',
+                    'icon' => 'beach_access',
+                ),
+                array(
+                    'item' => 'Cabana',
+                    'icon' => 'bungalow',
+                ),
+                array(
+                    'item' => 'Chalé',
+                    'icon' => 'chalet',
+                ),
+                array(
+                    'item' => 'Chácara',
+                    'icon' => 'gite',
+                ),
+                array(
+                    'item' => 'Fazenda',
+                    'icon' => 'agriculture',
+                ),
+                array(
+                    'item' => 'Pousada',
+                    'icon' => 'night_shelter',
+                ),
+                array(
+                    'item' => 'quarto privativo',
+                    'icon' => 'bed'
+                )
             )
         );
+
+        return $taxonomiesItems[$type];
     }
 
     public function getIconsSelect()

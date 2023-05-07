@@ -51,6 +51,7 @@ class Establishments {
         });
         add_action('init', function(){
             self::IterateTerms('partner_add');
+            self::IterateTerms('partner_type');
         });
     }
 
@@ -96,11 +97,14 @@ class Establishments {
     public function MetaboxEstablismentCPT () : void
     {
         $fmUser = new Fieldmanager_Group(array(
+            'serialize_data' => false,
+            'add_to_prefix' => false,
             'name' => 'estab_fields',
             'children' => array(
                 'name' => new Fieldmanager_TextField('Título'),
                 'description' => new Fieldmanager_RichTextArea('Descrição'),
                 'coust' => new Fieldmanager_TextField('Preço'),
+                'people_limit' => new Fieldmanager_TextField('Limite de pessoas'),
                 'email' => new Fieldmanager_TextField('E-mail'),
             ),
         ));
@@ -108,6 +112,8 @@ class Establishments {
 
         $fmAddress = new Fieldmanager_Group(array(
             'name' => 'estab_address',
+            'serialize_data' => false,
+            'add_to_prefix' => false,
             'label'          => 'Localização',
             'children' => array(
                 'country' => new Fieldmanager_TextField('País'),
@@ -117,8 +123,10 @@ class Establishments {
                 'address_number' => new Fieldmanager_TextField('N°'),
                 'neighborhood' => new Fieldmanager_TextField( 'Bairro' ),
                 'cep' => new Fieldmanager_TextField( 'cep' ),
+                'map' => new Fieldmanager_Checkbox( 'Deseja exibir o mapa?' ),
             ),
         ));
+
         $fmAddress->add_meta_box('Endereços', $this->cpt, 'normal', 'high');
 
         $fmImages = new Fieldmanager_Group(array(
@@ -234,6 +242,7 @@ class Establishments {
         $userID = (isset($_REQUEST['userid'])) ? sanitize_text_field($_REQUEST['userid']) : null;
 
         $coust = (isset($_REQUEST['coust'])) ? sanitize_text_field($_REQUEST['coust']) : null;
+        $people_limit = (isset($_REQUEST['people_limit'])) ? sanitize_text_field($_REQUEST['people_limit']) : '';
         $email = (isset($_REQUEST['email'])) ? sanitize_text_field($_REQUEST['email']) : null;
         $description = (isset($_REQUEST['description'])) ?  $_REQUEST['description'] : null;
         $urlreturn = (isset($_REQUEST['urlreturn'])) ?  $_REQUEST['urlreturn'] : null;
@@ -250,6 +259,7 @@ class Establishments {
             'name' => $name,
             'description' => $description,
             'coust' => $coust,
+            'people_limit' => $people_limit,
             'email' => $email,
         );
 
@@ -261,6 +271,7 @@ class Establishments {
             'address_number' => (isset($_REQUEST['address__address_number'])) ? sanitize_text_field($_REQUEST['address__address_number']) : '',
             'neighborhood' => (isset($_REQUEST['address__neighborhood'])) ? sanitize_text_field($_REQUEST['address__neighborhood']) : '',
             'cep' => (isset($_REQUEST['address__cep'])) ? sanitize_text_field($_REQUEST['address__cep']) : '',
+            'map' => (isset($_REQUEST['address__map'])) ? sanitize_text_field($_REQUEST['address__map']) : null,
         );
 
         if ( ! function_exists( 'post_exists' ) ) {
@@ -272,6 +283,7 @@ class Establishments {
 
         $phonesArgs = array();
         $pdCount = 0;
+        $tpCount = 0;
         foreach ($_REQUEST as $rkey => $request){
             if(strpos($rkey, 'phone') !== false && strpos($rkey, 'XXX') === false){
                 $indexNumber = filter_var($rkey, FILTER_SANITIZE_NUMBER_INT);
@@ -290,12 +302,25 @@ class Establishments {
                 wp_set_object_terms((int) $stablishmentID, (int) sanitize_text_field($_REQUEST[$rkey]), 'partner_add', $append);
                 $pdCount++;
             }
+
+            if(strpos($rkey,'tax_type') !== false){
+                $append = $tpCount > 0;
+                wp_set_object_terms((int) $stablishmentID, (int) sanitize_text_field($_REQUEST[$rkey]), 'partner_type', $append);
+                $tpCount++;
+            }
         }
 
         if($pdCount === 0){
             $postTermsPartner = get_the_terms($stablishmentID, 'partner_add');
             if(isset($postTermsPartner, $postTermsPartner[0])){
                 wp_remove_object_terms( $stablishmentID, $postTermsPartner[0]->term_id, 'partner_add' );
+            }
+        }
+
+        if($tpCount === 0){
+            $postTermsPartner = get_the_terms($stablishmentID, 'partner_type');
+            if(isset($postTermsPartner, $postTermsPartner[0])){
+                wp_remove_object_terms( $stablishmentID, $postTermsPartner[0]->term_id, 'partner_type' );
             }
         }
 
@@ -347,7 +372,7 @@ class Establishments {
             'message' => 'Estabelecimento ' . $actionstate . ' com sucesso!',
             'class' => 'alert,alert-success',
             'status' => 'ok',
-            'url' => $urlreturn.'/form/'.$stablishmentID,
+             'url' => $urlreturn.'/form/'.$stablishmentID,
             'id' => $stablishmentID
         ));
     }
@@ -456,6 +481,7 @@ class Establishments {
     {
         $taxonomies = array(
             'partner_user' => array('label' => 'Anfitrião'),
+            'partner_type' => array('label' => 'Tipo'),
             'partner_add' => array('label' => 'Adicionais'),
         );
 
@@ -495,7 +521,7 @@ class Establishments {
      */
     public function IterateTerms($tax) : void
     {
-        $terms = self::getTagEstablishments();
+        $terms = self::getTagEstablishments($tax);
 
         foreach ($terms as $term) {
             $term_id = wp_insert_term($term['item'], $tax);

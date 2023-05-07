@@ -45,7 +45,11 @@
                 <?php endif;?>
             </div>
             <div class="col-6 ps-4 d-flex justify-content-center flex-column">
-                <h4><?php echo esc_html($postDatas['name']); ?></h4>
+                <h4>
+                    <a href="<?php echo $baseUrl.get_query_var('panel').'/'.get_query_var('partner').'/form/'.get_the_ID(); ?>" class="link-dark text-decoration-none">
+                        <?php echo esc_html($postDatas['name']); ?>
+                    </a>
+                </h4>
                 <h5 class="display-6">
                     R$
                     <small class="text-body-secondary"><?php echo esc_html(isset($postDatas, $postDatas['coust']) ? $postDatas['coust'] : ''); ?></small>
