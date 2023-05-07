@@ -180,8 +180,12 @@ trait CustomersUtils{
             ),
             'partner_type' => array(
                 array(
+                    'item' => 'Acampamento',
+                    'icon' => 'camping',
+                ),
+                array(
                     'item' => 'Apartamento',
-                    'icon' => 'apartament',
+                    'icon' => 'apartment',
                 ),
                 array(
                     'item' => 'Casa',

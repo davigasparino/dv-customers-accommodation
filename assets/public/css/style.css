@@ -6,12 +6,15 @@
     right: 0;
 }
 
-.nav-image-profile{
+.nav-image-profile {
     width: 30px;
     height: 30px;
     object-fit: cover;
     border-radius: 50%;
+    border: 1px solid #fff;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
 }
+
 .image-profile {
     width: 80%;
     height: 80%;

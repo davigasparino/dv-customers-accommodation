@@ -1,11 +1,8 @@
 <?php
-    session_start();
-
     if (!isset($_SESSION['customer_loggedin']) || $_SESSION['customer_id'] !== get_the_ID()) {
         header('Location: /');
         exit;
     }
-    session_write_close();
 
     get_header();
 
