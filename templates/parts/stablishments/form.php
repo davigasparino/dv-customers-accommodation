@@ -7,6 +7,7 @@
 
     $title = isset($stab_fields['name']) ? $stab_fields['name'] : '';
     $description = isset($stab_fields['description']) ? $stab_fields['description'] : '';
+    $excerpt = isset($stab_fields['excerpt']) ? $stab_fields['excerpt'] : '';
     $coust = isset($stab_fields['coust']) ? $stab_fields['coust'] : '';
     $people_limit = isset($stab_fields['people_limit']) ? $stab_fields['people_limit'] : '';
     $email = isset($stab_fields['email']) ? $stab_fields['email'] : '';
@@ -47,6 +48,13 @@
         </div>
 
 
+
+        <div class="col-12 mb-4">
+            <div class="input-group">
+                <span class="input-group-text input-group-lg">Resumo para o anúncio</span>
+                <input type="text" class="form-control" maxlength="60" name="excerpt" id="excerpt" value="<?php echo esc_html($excerpt); ?>">
+            </div>
+        </div>
 
         <div class="col-12 mb-4">
             <div class="input-group">

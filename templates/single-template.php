@@ -16,7 +16,6 @@
     $adminLinks = (new class { use CustomersUtils; })::getMenuItems('customer');
 ?>
     <div class="container-fluid">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         <div class="row">
             <div class="col-md-12 col-lg-3 col-12 shadow position-relative col-cms-left py-4">
                 <div class="card border-0">

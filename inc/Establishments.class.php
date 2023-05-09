@@ -97,12 +97,11 @@ class Establishments {
     public function MetaboxEstablismentCPT () : void
     {
         $fmUser = new Fieldmanager_Group(array(
-            'serialize_data' => false,
-            'add_to_prefix' => false,
             'name' => 'estab_fields',
             'children' => array(
                 'name' => new Fieldmanager_TextField('Título'),
                 'description' => new Fieldmanager_RichTextArea('Descrição'),
+                'excerpt' => new Fieldmanager_RichTextArea('Resumo'),
                 'coust' => new Fieldmanager_TextField('Preço'),
                 'people_limit' => new Fieldmanager_TextField('Limite de pessoas'),
                 'email' => new Fieldmanager_TextField('E-mail'),
@@ -112,8 +111,6 @@ class Establishments {
 
         $fmAddress = new Fieldmanager_Group(array(
             'name' => 'estab_address',
-            'serialize_data' => false,
-            'add_to_prefix' => false,
             'label'          => 'Localização',
             'children' => array(
                 'country' => new Fieldmanager_TextField('País'),
@@ -245,6 +242,7 @@ class Establishments {
         $people_limit = (isset($_REQUEST['people_limit'])) ? sanitize_text_field($_REQUEST['people_limit']) : '';
         $email = (isset($_REQUEST['email'])) ? sanitize_text_field($_REQUEST['email']) : null;
         $description = (isset($_REQUEST['description'])) ?  $_REQUEST['description'] : null;
+        $excerpt = (isset($_REQUEST['excerpt'])) ?  $_REQUEST['excerpt'] : null;
         $urlreturn = (isset($_REQUEST['urlreturn'])) ?  $_REQUEST['urlreturn'] : null;
 
         $name = (isset($_REQUEST['title'])) ?  sanitize_text_field($_REQUEST['title']) : null;
@@ -258,6 +256,7 @@ class Establishments {
         $args = array(
             'name' => $name,
             'description' => $description,
+            'excerpt' => $excerpt,
             'coust' => $coust,
             'people_limit' => $people_limit,
             'email' => $email,
@@ -347,7 +346,7 @@ class Establishments {
                 'post_name' => $name,
                 'post_type' => $this->cpt,
                 'post_content' => $name,
-                'post_status' => 'pending'
+                'post_status' => 'published'
             ));
         }
 
