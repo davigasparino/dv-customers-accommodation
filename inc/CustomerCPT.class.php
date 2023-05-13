@@ -170,6 +170,15 @@
             ));
             $fmPhones->add_meta_box('Telefones', $this->cpt, 'normal', 'high');
 
+            $fmCustom = new Fieldmanager_Group(array(
+                'name' => 'custom',
+                'label' => 'Customizações',
+                'children' => array(
+                    'favorite_items' => new Fieldmanager_TextField('Favoritos')
+                )
+            ));
+            $fmCustom->add_meta_box(' ', $this->cpt, 'normal', 'low');
+
         }
 
         /**
@@ -270,6 +279,7 @@
         public function CustomerActionRequest( $request )
         {
             if ( 'customer-ajax' === $request->request ) {
+
                 switch ($_REQUEST['action']){
                     case 'UploadProfileImage':
                         return self::UploadProfileImage();
@@ -289,6 +299,10 @@
 
                     case 'updatePass':
                         return self::updatePass();
+                        break;
+
+                    case 'FavoriteItem':
+                        return self::FavoriteItem();
                         break;
 
                     default;
@@ -349,6 +363,31 @@
             return wp_send_json(array(
                 'message' => 'Senha atualizada com sucesso',
                 'class' => 'alert,alert-success'
+            ));
+        }
+
+        public function FavoriteItem()
+        {
+            if(!$_SESSION['customer_id']) return false;
+
+            $id = sanitize_text_field($_REQUEST['id']) ?? null;
+            $meta = get_post_meta($_SESSION['customer_id'], 'custom') ?? null;
+            $favorites = (json_decode($meta[0]['favorite_items'])) ?? array();
+
+            $findItem = array_search($id, $favorites);
+
+            if(is_int($findItem)){
+                unset($favorites[$findItem]);
+                $favorites = array_values($favorites);
+            }else{
+                $favorites[] = $id;
+            }
+
+            update_post_meta($_SESSION['customer_id'], 'custom', array('favorite_items' => wp_json_encode($favorites)));
+
+            return wp_send_json(array(
+                'status' => 'ok',
+                'message' => 'Adicionado a galeria de favoritos.',
             ));
         }
 

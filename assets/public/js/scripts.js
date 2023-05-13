@@ -14,6 +14,10 @@ utils.on(document, 'click', '#userLogout', function(event) {
     userLogout();
 });
 
+utils.on(document, 'click', '.establishments-cards .favorite-btn', function(event){
+    favoriteItem(event);
+})
+
 const loginSend = (isValid) => {
 
     if(!isValid){
@@ -99,5 +103,42 @@ const userLogout = () => {
         })
         .finally(() => {
             window.location.href = '/';
+        });
+}
+
+const favoriteItem = (event) =>{
+
+    if(isScriptsLoading){
+        return false;
+    }
+
+    isScriptsLoading = true;
+
+    if(event.target.classList.value === 'material-symbols-outlined'){
+        event.target.classList.add('material-symbols-rounded');
+        event.target.classList.remove('material-symbols-outlined');
+    }else{
+        event.target.classList.remove('material-symbols-rounded');
+        event.target.classList.add('material-symbols-outlined');
+    }
+
+    let params = {
+        action: 'FavoriteItem',
+        id: event.target.parentNode.dataset.id
+    };
+
+    params = utils.objectScriptsToUrlParams(params);
+
+    console.log("Customer_js => ", Customer_js.url);
+
+    fetch( Customer_js.url + '?' + params)
+        .then(response => {
+            if(response.ok) return response.json();
+        })
+        .catch( () => {
+
+        })
+        .finally( () => {
+            isScriptsLoading = false;
         });
 }
