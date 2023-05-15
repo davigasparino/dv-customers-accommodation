@@ -28,7 +28,8 @@ class Establishments {
             );
             $args = array(
                 'supports' => array( 'title', 'thumbnail' ),
-                'menu_icon'           => 'dashicons-admin-multisite',
+                'menu_icon' => 'dashicons-admin-multisite',
+                'rewrite' => array( 'slug' => 'acomodacoes' ),
             );
             $labels = array(
 
@@ -53,6 +54,7 @@ class Establishments {
             self::IterateTerms('partner_add');
             self::IterateTerms('partner_type');
         });
+        add_filter( 'single_template', array($this, 'EstablishmentsSingleTemplate'));
     }
 
 
@@ -84,6 +86,7 @@ class Establishments {
     {
         global $post;
         if(isset($post) && $this->cpt === $post->post_type || 'customers' === $post->post_type) {
+            wp_enqueue_style('stablishments-photoswipe-css', CustomerURL . '/assets/photoswipe/photoswipe.css');
             wp_enqueue_style('stablishments-rte-css', CustomerURL . '/assets/richtexteditor/rte_theme_default.css');
             wp_enqueue_style('stablishments-cpt-css', CustomerURL . '/assets/public/css/style.css');
         }
@@ -533,6 +536,21 @@ class Establishments {
 
             update_term_meta($term_id, 'icon', $term['icon']);
         }
+    }
+
+    /**
+     * Establishments Single Template
+     *
+     * @param $single_template
+     * @return string
+     */
+    function EstablishmentsSingleTemplate($single_template) {
+        global $post;
+
+        if ($post->post_type == $this->cpt ) {
+            $single_template = CustomerPATH . 'templates/single-establishments.php';
+        }
+        return $single_template;
     }
 
 }
