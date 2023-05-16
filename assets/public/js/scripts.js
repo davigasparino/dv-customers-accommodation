@@ -146,7 +146,7 @@ const favoriteItem = (event) =>{
 import PhotoSwipeLightbox from 'https://unpkg.com/photoswipe/dist/photoswipe-lightbox.esm.js';
 
 const lightbox = new PhotoSwipeLightbox({
-    gallery: '#my-gallery',
+    gallery: '#establishmentsGallery',
     children: 'a',
     pswpModule: () => import('https://unpkg.com/photoswipe'),
 });
