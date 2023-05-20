@@ -327,4 +327,3 @@ const slist = (target) => {
 }
 
 slist(document.querySelector(".images-container"));
-

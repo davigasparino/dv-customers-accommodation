@@ -27,7 +27,7 @@ class Establishments {
                 'plural' => 'Estabelecimentos',
             );
             $args = array(
-                'supports' => array( 'title', 'thumbnail' ),
+                'supports' => array( 'title', 'editor', 'thumbnail' ),
                 'menu_icon' => 'dashicons-admin-multisite',
                 'rewrite' => array( 'slug' => 'acomodacoes' ),
             );
@@ -70,7 +70,7 @@ class Establishments {
             'Establisment_ajax'   => $ajax_slug,
         ];
 
-        if(isset($post) && $this->cpt === $post->post_type || 'customers' === $post->post_type){
+        if( isset($post) && $this->cpt === $post->post_type || get_page_template_slug() == 'user-panel.php' ){
             wp_enqueue_script( 'stablishments-cpt-richtexteditor', CustomerURL . '/assets/richtexteditor/rte.js', array(), false, true );
             wp_enqueue_script( 'stablishments-cpt-richtexteditor-plugins', CustomerURL . '/assets/richtexteditor/plugins/all_plugins.js', array(), false, true );
             wp_enqueue_script( 'stablishments-cpt-scripts', CustomerURL . '/assets/public/js/establishments.js', array(), false, true );
@@ -85,7 +85,7 @@ class Establishments {
     public function EstablismentEnqueueStyles() : void
     {
         global $post;
-        if(isset($post) && $this->cpt === $post->post_type || 'customers' === $post->post_type) {
+        if(isset($post) && $this->cpt === $post->post_type || get_page_template_slug() == 'user-panel.php') {
             wp_enqueue_style('stablishments-photoswipe-css', CustomerURL . '/assets/photoswipe/photoswipe.css');
             wp_enqueue_style('stablishments-rte-css', CustomerURL . '/assets/richtexteditor/rte_theme_default.css');
             wp_enqueue_style('stablishments-cpt-css', CustomerURL . '/assets/public/css/style.css');
@@ -280,8 +280,8 @@ class Establishments {
             require_once( ABSPATH . 'wp-admin/includes/post.php' );
         }
 
-        $title_stablishment = $userID . ' - ' . $name;
-        $stablishmentID = post_exists($title_stablishment, '', '', $this->cpt);
+        $content_stablishment = $userID . ' - ' . $name;
+        $stablishmentID = post_exists($name, $content_stablishment, '', $this->cpt);
 
         $phonesArgs = array();
         $pdCount = 0;
@@ -345,11 +345,11 @@ class Establishments {
             $actionstate = 'atualizado';
         }else{
             $stablishmentID = wp_insert_post(array(
-                'post_title' => $title_stablishment,
+                'post_title' => $name,
                 'post_name' => $name,
                 'post_type' => $this->cpt,
-                'post_content' => $name,
-                'post_status' => 'published'
+                'post_content' => $content_stablishment,
+                'post_status' => 'publish'
             ));
         }
 

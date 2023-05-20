@@ -1,10 +1,7 @@
 <?php
     $userFields = get_query_var('userFields');
-    $username = (isset($userFields, $userFields['userfields'], $userFields['userfields']['name'])) ? $userFields['userfields']['name'] : '';
-    $userEmail = (isset($userFields, $userFields['userfields'], $userFields['userfields']['email'])) ? $userFields['userfields']['email'] : '';
-    $lastname = (isset($userFields, $userFields['userfields'], $userFields['userfields']['lastname'])) ? $userFields['userfields']['lastname'] : '';
-    $cpf = (isset($userFields, $userFields['userfields'], $userFields['userfields']['user_cpf'])) ? $userFields['userfields']['user_cpf'] : '';
-    $rg = (isset($userFields, $userFields['userfields'], $userFields['userfields']['user_rg'])) ? $userFields['userfields']['user_rg'] : '';
+    $cpf = (isset($userFields, $userFields['userfields'], $userFields['userfields']['cpf'])) ? $userFields['userfields']['cpf'] : '';
+    $rg = (isset($userFields, $userFields['userfields'], $userFields['userfields']['rg'])) ? $userFields['userfields']['rg'] : '';
 
     $param = (!empty(get_query_var('panel'))) ? get_query_var('panel') : 'dashboard';
 ?>
@@ -18,13 +15,13 @@
                 <div class="col-12 col-md-6 py-3 pe-md-4">
                     <div class="input-group input-group-lg">
                         <span class="input-group-text">Nome</span>
-                        <input type="text" class="form-control" name="user_name" id="user_name" maxlength="70" aria-label="Nome" value="<?php echo esc_attr($username); ?>" required>
+                        <input type="text" class="form-control" name="user_name" id="user_name" maxlength="70" aria-label="Nome" value="<?php echo esc_attr($userFields['currentUser']->first_name); ?>" required>
                     </div>
                 </div>
                 <div class="col-12 col-md-6 py-3 ps-md-4">
                     <div class="input-group input-group-lg">
                         <span class="input-group-text">Sobrenome</span>
-                        <input type="text" class="form-control" name="user_lastname" id="user_lastname" maxlength="70" aria-label="Sobrenome" value="<?php echo esc_attr($lastname); ?>" required>
+                        <input type="text" class="form-control" name="user_lastname" id="user_lastname" maxlength="70" aria-label="Sobrenome" value="<?php echo esc_attr($userFields['currentUser']->last_name); ?>" required>
                     </div>
                 </div>
                 <div class="col-12 col-md-6 py-3 pe-md-4">
@@ -50,7 +47,7 @@
                 <div class="col-12 col-md-6 py-3 pe-md-4">
                     <div class="input-group input-group-lg">
                         <span class="input-group-text">E-mail</span>
-                        <input type="email" class="form-control" name="user_email" id="user_email" aria-label="E-mail" maxlength="70" value="<?php echo esc_attr($userEmail); ?>" required>
+                        <input type="email" class="form-control" name="user_email" id="user_email" aria-label="E-mail" maxlength="70" disabled value="<?php echo esc_attr($userFields['currentUser']->user_email); ?>" required>
                     </div>
                 </div>
                 <?php if(!$userFields): ?>
@@ -80,8 +77,8 @@
                 ));
                 include(CustomerPATH . '/templates/parts/single/form_address.php');
 
-                if(isset($userFields, $userFields['ID'])){
-                    $userAddress = get_post_meta($userFields['ID'], 'user_address')[0];
+                if(isset($userFields, $userFields['currentUser']->ID)){
+                    $userAddress = get_user_meta($userFields['currentUser']->ID, 'user_address')[0];
                     if(isset($userAddress) && is_array($userAddress)){
                         foreach ($userAddress as $key => $address){
                             set_query_var('customer_address', array(
@@ -114,8 +111,8 @@
                 ));
                 include(CustomerPATH . '/templates/parts/single/form_phones.php');
 
-                if(isset($userFields, $userFields['ID'])) {
-                    $userPhones = get_post_meta($userFields['ID'], 'user_phones')[0];
+                if(isset($userFields, $userFields['currentUser']->ID)) {
+                    $userPhones = get_user_meta($userFields['currentUser']->ID, 'user_phones')[0];
                     if (isset($userPhones) && is_array($userPhones)) {
                         foreach ($userPhones as $key => $phone) {
                             set_query_var('customer_phones', array(

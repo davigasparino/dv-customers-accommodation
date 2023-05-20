@@ -634,11 +634,6 @@
             $user = (isset($_REQUEST['userLogin'])) ? sanitize_text_field($_REQUEST['userLogin']) : null;
             $pass = (isset($_REQUEST['userPass'])) ? sanitize_text_field($_REQUEST['userPass']) : null;
 
-            if(isset($args['user'], $args['pass'])){
-                $user = $args['user'];
-                $pass = $args['pass'];
-            }
-
             if(empty($user) || empty($pass)){
                 return wp_send_json(array(
                     'message' => 'Campos obrigatórios',
@@ -646,36 +641,25 @@
                 ));
             }
 
-            $userID = self::userExists($user);
-            if(!$userID){
+            $user = wp_authenticate($user, $pass);
+            if(!is_wp_error($user)) {
+                $first_name = $user->user_nicename;
+                wp_set_current_user( $user->ID, $user->user_login );
+                wp_set_auth_cookie( $user->ID );
+                $current_user = wp_get_current_user();
                 return wp_send_json(array(
-                    'message' => 'Exte e-mail já consta em nosso sistema',
-                    'class' => 'alert,alert-danger'
+                    'message' => 'Saudações ' . $current_user->first_name . '!',
+                    'url' => '',
+                    'status' => 'ok',
+                    'class' => 'alert,alert-success'
                 ));
-            }
-
-            $pass = self::checkPassword($userID, $pass);
-            if(!$pass){
+            } else {
                 return wp_send_json(array(
                     'message' => 'Dados inválidos',
                     'class' => 'alert,alert-danger'
                 ));
             }
 
-            $name = array_shift(get_post_meta($userID, 'user_fields'));
-
-            session_start();
-            session_regenerate_id();
-            $_SESSION['customer_loggedin'] = TRUE;
-            $_SESSION['customer_name'] = $name['name'];
-            $_SESSION['customer_id'] = $userID;
-
-            return wp_send_json(array(
-                'message' => 'Saudações ' . $_SESSION['customer_name'] . '!',
-                'url' => get_permalink($userID),
-                'status' => 'ok',
-                'class' => 'alert,alert-success'
-            ));
         }
 
         /**

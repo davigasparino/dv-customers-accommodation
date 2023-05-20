@@ -152,3 +152,15 @@ const lightbox = new PhotoSwipeLightbox({
 });
 
 lightbox.init();
+
+utils.on(document, 'click', '#viewAllImages', function(event){
+    event.target.classList.add('d-none');
+    document.getElementById('closeAllImages').classList.remove('d-none');
+    document.querySelector('.last-images').classList.add('active');
+});
+
+utils.on(document, 'click', '#closeAllImages', function(event){
+    event.target.classList.add('d-none');
+    document.getElementById('viewAllImages').classList.remove('d-none');
+    document.querySelector('.last-images').classList.remove('active');
+});

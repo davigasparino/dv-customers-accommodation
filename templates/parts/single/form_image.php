@@ -1,13 +1,12 @@
 <?php
 $userFields = get_query_var('userFields');
-$username = (isset($userFields, $userFields['userfields'], $userFields['userfields']['name'])) ? $userFields['userfields']['name'] : '';
 $userEmail = (isset($userFields, $userFields['userfields'], $userFields['userfields']['email'])) ? $userFields['userfields']['email'] : '';
 $lastname = (isset($userFields, $userFields['userfields'], $userFields['userfields']['lastname'])) ? $userFields['userfields']['lastname'] : '';
 ?>
 
     <?php $profileImageBoll = (isset($userFields, $userFields['ID'])) ? get_the_post_thumbnail_url($userFields['ID'], 'large') : null; ?>
     <?php $profileImage = (isset($profileImageBoll) && !empty($profileImageBoll)) ? $profileImageBoll : CustomerURL . 'assets/public/img/image-default.jpg'; ?>
-    <h5 class="card-title">Olá, <?php echo esc_attr($username); ?></h5>
+    <h5 class="card-title">Olá, <?php echo esc_attr($userFields['currentUser']->first_name); ?></h5>
     <figure class="figure position-relative p-50 mb-0 w-100">
         <img src="<?php echo esc_url($profileImage); ?>" class="figure-img img-fluid m-0 image-profile" id="profileUserImage" alt="..." <?php if($profileImageBoll): ?> data-bs-toggle="modal" data-bs-target="#viewImageMd" <?php endif; ?> >
         <div class="hstack gap-3 position-absolute bottom-0 end-0 ">

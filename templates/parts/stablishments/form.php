@@ -249,7 +249,7 @@
     <section class="container-fluid py-5">
         <div class="container">
             <h3 class="mb-3 mt-3"><span class="material-symbols-outlined me-2">house</span> Categoria</h3>
-            <div class="row p-0 rowPhones m-0">
+            <div class="row p-0 m-0">
                 <div class="col-12 p-0">
                     <?php
                     $tax_add = get_terms(array(
@@ -282,7 +282,7 @@
     <section class="container-fluid py-5">
         <div class="container">
             <h3 class="mb-3 mt-3"><span class="material-symbols-outlined me-2">mobile_friendly</span> Adicionais</h3>
-            <div class="row p-0 rowPhones m-0">
+            <div class="row p-0 m-0">
                 <div class="col-12 p-0">
                 <?php
                 $tax_add = get_terms(array(
