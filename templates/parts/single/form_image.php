@@ -1,15 +1,16 @@
 <?php
-$userFields = get_query_var('userFields');
-$current_user = wp_get_current_user();
-$userEmail = (isset($userFields, $userFields['userfields'], $userFields['userfields']['email'])) ? $userFields['userfields']['email'] : '';
-$lastname = (isset($userFields, $userFields['userfields'], $userFields['userfields']['lastname'])) ? $userFields['userfields']['lastname'] : '';
+    $userFields = get_query_var('userFields');
+    $current_user = wp_get_current_user();
+    $userEmail = (isset($userFields, $userFields['userfields'], $userFields['userfields']['email'])) ? $userFields['userfields']['email'] : '';
+    $lastname = (isset($userFields, $userFields['userfields'], $userFields['userfields']['lastname'])) ? $userFields['userfields']['lastname'] : '';
+
+    $userMetas = array_shift(get_user_meta($current_user->ID, 'user_fields'));
+    $profileImage = !empty($userMetas['profile']) ? wp_get_attachment_image_url($userMetas['profile'], 'large') : CustomerURL . 'assets/public/img/image-default.jpg';;
 ?>
 
-    <?php $profileImageBoll = (isset($userFields, $userFields['ID'])) ? get_the_post_thumbnail_url($userFields['ID'], 'large') : null; ?>
-    <?php $profileImage = (isset($profileImageBoll) && !empty($profileImageBoll)) ? $profileImageBoll : CustomerURL . 'assets/public/img/image-default.jpg'; ?>
     <h5 class="card-title">Olá, <?php echo esc_attr($userFields['currentUser']->first_name); ?></h5>
     <figure class="figure position-relative p-50 mb-0 w-100">
-        <img src="<?php echo esc_url($profileImage); ?>" class="figure-img img-fluid m-0 image-profile" id="profileUserImage" alt="..." <?php if($profileImageBoll): ?> data-bs-toggle="modal" data-bs-target="#viewImageMd" <?php endif; ?> >
+        <img src="<?php echo esc_url($profileImage); ?>" class="figure-img img-fluid m-0 image-profile" id="profileUserImage" alt="..." <?php if(!empty($userMetas['profile'])): ?> data-bs-toggle="modal" data-bs-target="#viewImageMd" <?php endif; ?> >
         <div class="hstack gap-3 position-absolute bottom-0 end-0 ">
             <button type="button" class="btn btn-sm btn-outline-dark orange-500 border-0 p-0 m-0 d-flex" data-bs-toggle="modal" data-bs-target="#updateImageMd">
                 <span class="material-symbols-outlined">image_search</span>
@@ -52,7 +53,7 @@ $lastname = (isset($userFields, $userFields['userfields'], $userFields['userfiel
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body d-flex justify-content-center">
-                    <img id="viewImageProfile" src="<?php echo esc_url(get_the_post_thumbnail_url($userFields['ID'], 'full')); ?>" class="img-fluid" alt="...">
+                    <img id="viewImageProfile" src="<?php echo esc_url((!empty($userMetas['profile'])) ? wp_get_attachment_image_url($userMetas['profile'], 'full') : ''); ?>" class="img-fluid" alt="...">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-outline-secondary border-0 p-0 m-0" data-bs-toggle="modal" data-bs-target="#updateImageMd">

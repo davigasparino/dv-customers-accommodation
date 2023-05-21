@@ -64,6 +64,119 @@ class CustomUser {
     }
 
     /**
+     * Upload Profile Image
+     *
+     * @return string
+     */
+    public function UploadProfileImage() : string
+    {
+        $nonce = isset($_REQUEST['nounce']) ? sanitize_text_field($_REQUEST['nounce']) : '';
+        if ( ! wp_verify_nonce( $nonce, 'CustomUser_nounce' ) ) {
+            return wp_send_json(new WP_Error('wperro', 'Nounce Inválido'));
+        }
+
+        $userID = (isset($_REQUEST['userID'])) ? sanitize_text_field($_REQUEST['userID']) : null;
+        $userMeta = get_user_meta($userID, 'user_fields');
+
+        if(!$userID){
+            return wp_send_json(array(
+                'message' => 'Erro',
+                'image' => null,
+                'class' => 'alert,alert-danger',
+                'id' => null
+            ));
+        }
+
+        require_once (ABSPATH . 'wp-admin/includes/image.php');
+        require_once (ABSPATH . 'wp-admin/includes/file.php');
+        require_once (ABSPATH . 'wp-admin/includes/media.php');
+
+        if($userMeta && isset($userMeta[0]['profile'])){
+            wp_delete_attachment( (int) $userMeta[0]['profile'], true);
+        }
+
+        $imageID = wp_handle_upload($_FILES['photo'], array('test_form' => FALSE));
+        $attachment = array(
+            'guid'           => $imageID['url'],
+            'post_mime_type' => $_FILES['photo']['type'],
+            'post_title'     => $_FILES['photo']['name'],
+            'post_content'   => '',
+            'post_status'    => 'inherit'
+        );
+
+        $attachmentID = wp_insert_attachment( $attachment, $imageID['file'], $userID );
+        if ( !is_wp_error( $attachmentID )) {
+            $attach_meta = wp_generate_attachment_metadata( $attachmentID, $imageID['file'] );
+            wp_update_attachment_metadata( $attachmentID, $attach_meta);
+        }
+
+        $userMeta[0]['profile'] = $attachmentID;
+        update_user_meta( $userID, 'user_fields', $userMeta[0] );
+
+        return wp_send_json(array(
+            'status' => 'ok',
+            'message' => 'Imagem Atualizada com sucesso',
+            'class' => 'alert,alert-success',
+            'image_url' => wp_get_attachment_image_url($attachmentID, 'large'),
+            'image_id' => $attachmentID,
+        ));
+
+    }
+
+    /**
+     * Update Pass
+     *
+     * @return string
+     */
+    public function updatePass() : string
+    {
+        $nonce = isset($_REQUEST['nounce']) ? sanitize_text_field($_REQUEST['nounce']) : '';
+        if ( ! wp_verify_nonce( $nonce, 'CustomUser_nounce' ) ) {
+            return wp_send_json(new WP_Error('wperro', 'Nounce Inválido'));
+        }
+
+        $oldPassword = (isset($_REQUEST['oldPassword'])) ? sanitize_text_field($_REQUEST['oldPassword']) : null;
+        $newPassword = (isset($_REQUEST['newPassword'])) ? sanitize_text_field($_REQUEST['newPassword']) : null;
+        $confirmNewPassword = (isset($_REQUEST['confirmNewPassword'])) ? sanitize_text_field($_REQUEST['confirmNewPassword']) : null;
+        $userID = (isset($_REQUEST['userPassword'])) ? sanitize_text_field($_REQUEST['userPassword']) : null;
+
+        if(empty($newPassword) || is_null($newPassword) || $newPassword !== $confirmNewPassword){
+            return wp_send_json(array(
+                'message' => 'Senhas não conferem',
+                'class' => 'alert,alert-danger'
+            ));
+        }
+
+        if(strlen($newPassword) < 8){
+            return wp_send_json(array(
+                'message' => 'Senha precisa conter mais que 8 caracteres',
+                'class' => 'alert,alert-danger'
+            ));
+        }
+
+        $current_user = wp_get_current_user();
+
+        $user = wp_authenticate($current_user->user_email, $oldPassword);
+
+        if(!is_wp_error($user)){
+            wp_set_password( $newPassword, $userID );
+            wp_set_current_user( $user->ID, $user->user_login );
+            wp_set_auth_cookie( $user->ID );
+        }else{
+            return wp_send_json(array(
+                'message' => 'Senha incorreta',
+                'class' => 'alert,alert-danger'
+            ));
+        }
+
+
+        return wp_send_json(array(
+            'message' => 'Senha atualizada com sucesso',
+            'class' => 'alert,alert-success'
+        ));
+    }
+
+    /**
      * Add Metaboxes and field to CustomUsers custom post type
      *
      * @throws FM_Developer_Exception
@@ -230,7 +343,8 @@ class CustomUser {
 
         $args = array(
             'rg' => $user_rg,
-            'cpf' => $user_cpf
+            'cpf' => $user_cpf,
+            'profile' => ''
         );
 
         $countAddress = (isset($_REQUEST['countAddress'])) ?  sanitize_text_field($_REQUEST['countAddress']) : 0;

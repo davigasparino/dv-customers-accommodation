@@ -351,6 +351,7 @@
         $theUser = $current_user->ID;
     ?>
     <input type="hidden" name="userid" id="userid" value="<?php echo esc_attr($theUser); ?>">
+    <input type="hidden" name="formaction" id="formaction" value="<?php echo esc_attr($IDPost); ?>">
     <input type="hidden" name="urlreturn" id="urlreturn" value="<?php echo esc_attr(get_permalink().get_query_var('panel').'/'.get_query_var('partner').'/'); ?>">
 
     <div class="col-12 text-end">

@@ -3,7 +3,8 @@
     <div class="btn-group dropstart">
         <a class="border-0 bg-transparent" type="button" href="<?php echo esc_url(site_url()); ?>/admin">
             <?php
-            $userProfileImage = get_the_post_thumbnail_url($current_user->ID, 'thumbnail');
+            $userMetas = array_shift(get_user_meta($current_user->ID, 'user_fields'));
+            $userProfileImage = wp_get_attachment_image_url($userMetas['profile'], 'thumbnail');
             if($userProfileImage):?>
                 <img src="<?php echo esc_url($userProfileImage); ?>" class="nav-image-profile">
             <?php else: ?>

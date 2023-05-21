@@ -73,6 +73,7 @@ const loginSend = (isValid) => {
         })
         .finally(() => {
             btnLoader.classList.add("d-none");
+            isScriptsLoading = false;
         });
 }
 

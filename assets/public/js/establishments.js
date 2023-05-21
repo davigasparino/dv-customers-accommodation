@@ -165,7 +165,7 @@ const updateDataEstablisment = (isValidForm, formstablishmentdata) => {
                 utils.feedbackMessage(MessageContainer, json);
             }
 
-            if(json.status && json.status === 'ok'){
+            if(json.url && json.status && json.status === 'ok'){
                 window.location.href = json.url;
             }
         })

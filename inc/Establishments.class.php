@@ -247,6 +247,7 @@ class Establishments {
         $description = (isset($_REQUEST['description'])) ?  $_REQUEST['description'] : null;
         $excerpt = (isset($_REQUEST['excerpt'])) ?  $_REQUEST['excerpt'] : null;
         $urlreturn = (isset($_REQUEST['urlreturn'])) ?  $_REQUEST['urlreturn'] : null;
+        $formaction = (isset($_REQUEST['formaction'])) ?  $_REQUEST['formaction'] : null;
 
         $name = (isset($_REQUEST['title'])) ?  sanitize_text_field($_REQUEST['title']) : null;
         if(!$name){
@@ -281,7 +282,34 @@ class Establishments {
         }
 
         $content_stablishment = $userID . ' - ' . $name;
-        $stablishmentID = post_exists($name, $content_stablishment, '', $this->cpt);
+
+        if($formaction){
+            $stablishmentID = $formaction;
+            $urlreturn = null;
+        }else{
+            $stablishmentID = post_exists($name, $content_stablishment, '', $this->cpt);
+        }
+
+        $actionstate = 'inserido';
+        if($stablishmentID){
+            wp_update_post( array(
+                'ID'         => $stablishmentID,
+                'post_author' => $userID,
+                'post_content' => $content_stablishment,
+            ));
+            $actionstate = 'atualizado';
+        }else{
+            $stablishmentID = wp_insert_post(array(
+                'post_title' => $name,
+                'post_name' => $name,
+                'post_type' => $this->cpt,
+                'post_content' => $content_stablishment,
+                'post_status' => 'publish',
+                'post_author' => $userID
+            ));
+
+            $urlreturn = $urlreturn.'/form/'.$stablishmentID;
+        }
 
         $phonesArgs = array();
         $pdCount = 0;
@@ -337,24 +365,6 @@ class Establishments {
             }
         }
 
-        $actionstate = 'inserido';
-        if($stablishmentID){
-            wp_update_post( array(
-                'ID'         => $stablishmentID,
-                'post_author' => $userID,
-            ));
-            $actionstate = 'atualizado';
-        }else{
-            $stablishmentID = wp_insert_post(array(
-                'post_title' => $name,
-                'post_name' => $name,
-                'post_type' => $this->cpt,
-                'post_content' => $content_stablishment,
-                'post_status' => 'publish',
-                'post_author' => $userID
-            ));
-        }
-
         update_post_meta( $stablishmentID, 'estab_fields', $args );
         update_post_meta( $stablishmentID, 'estab_address', $addressArgs );
         update_post_meta( $stablishmentID, 'estab_phones', $phonesArgs );
@@ -363,7 +373,7 @@ class Establishments {
             'message' => 'Estabelecimento ' . $actionstate . ' com sucesso!',
             'class' => 'alert,alert-success',
             'status' => 'ok',
-             'url' => $urlreturn.'/form/'.$stablishmentID,
+            'url' => $urlreturn,
             'id' => $stablishmentID
         ));
     }

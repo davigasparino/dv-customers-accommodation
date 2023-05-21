@@ -52,19 +52,19 @@
 
         let formData = new FormData();
         let photo = document.getElementById('profileImage').files[0];
-        let postID = document.getElementById('image_user_id').value;
+        let userID = document.getElementById('image_user_id').value;
 
         formData.append("action", 'UploadProfileImage');
-        formData.append("postID", postID);
+        formData.append("userID", userID);
         formData.append("photo", photo);
-        formData.append("nounce", Customer_js.nounce);
+        formData.append("nounce", CustomUser_js.nounce);
 
 
         const ctrl = new AbortController()    // timeout
         setTimeout(() => ctrl.abort(), 10000);
 
         try {
-            fetch(Customer_js.url,
+            fetch(CustomUser_js.url,
                 {method: "POST", body: formData, signal: ctrl.signal})
                 .then((response) => {
                     return response.json().then((data) => {
@@ -75,17 +75,17 @@
 
                         let profileUserImage = document.getElementById('profileUserImage');
                         if(profileUserImage){
-                            profileUserImage.src = data.image;
+                            profileUserImage.src = data.image_url;
                         }
 
                         let viewImageProfile = document.getElementById('viewImageProfile');
                         if(viewImageProfile){
-                            viewImageProfile.src = data.image;
+                            viewImageProfile.src = data.image_url;
                         }
 
                         let nav_image_profile = document.querySelector('.nav-image-profile');
                         if(nav_image_profile){
-                            nav_image_profile.src = data.image;
+                            nav_image_profile.src = data.image_url;
                         }
 
                         return data;
@@ -115,8 +115,8 @@
 
         let params = {
             action: 'updatePass',
-            nounce: Customer_js.nounce,
-            url: Customer_js.Customer_ajax
+            nounce: CustomUser_js.nounce,
+            url: CustomUser_js.CustomUser_ajax
         };
 
         let oldPassword = document.getElementById('oldPassword');
@@ -141,7 +141,7 @@
 
         params = utils.objectScriptsToUrlParams(params);
 
-        fetch(Customer_js.url + '?' + params)
+        fetch(CustomUser_js.url + '?' + params)
             .then(response => {
                 if(response.ok) return response.json();
             })
