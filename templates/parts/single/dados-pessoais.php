@@ -1,5 +1,8 @@
 <?php
     $userFields = get_query_var('userFields');
+    $name = $userFields['currentUser']->first_name ?? null;
+    $last_name = $userFields['currentUser']->last_name ?? null;
+    $user_email = $userFields['currentUser']->user_email ?? null;
     $cpf = (isset($userFields, $userFields['userfields'], $userFields['userfields']['cpf'])) ? $userFields['userfields']['cpf'] : '';
     $rg = (isset($userFields, $userFields['userfields'], $userFields['userfields']['rg'])) ? $userFields['userfields']['rg'] : '';
 
@@ -15,13 +18,13 @@
                 <div class="col-12 col-md-6 py-3 pe-md-4">
                     <div class="input-group input-group-lg">
                         <span class="input-group-text">Nome</span>
-                        <input type="text" class="form-control" name="user_name" id="user_name" maxlength="70" aria-label="Nome" value="<?php echo esc_attr($userFields['currentUser']->first_name); ?>" required>
+                        <input type="text" class="form-control" name="user_name" id="user_name" maxlength="70" aria-label="Nome" value="<?php echo esc_attr($name); ?>" required>
                     </div>
                 </div>
                 <div class="col-12 col-md-6 py-3 ps-md-4">
                     <div class="input-group input-group-lg">
                         <span class="input-group-text">Sobrenome</span>
-                        <input type="text" class="form-control" name="user_lastname" id="user_lastname" maxlength="70" aria-label="Sobrenome" value="<?php echo esc_attr($userFields['currentUser']->last_name); ?>" required>
+                        <input type="text" class="form-control" name="user_lastname" id="user_lastname" maxlength="70" aria-label="Sobrenome" value="<?php echo esc_attr($last_name); ?>" required>
                     </div>
                 </div>
                 <div class="col-12 col-md-6 py-3 pe-md-4">
@@ -47,7 +50,7 @@
                 <div class="col-12 col-md-6 py-3 pe-md-4">
                     <div class="input-group input-group-lg">
                         <span class="input-group-text">E-mail</span>
-                        <input type="email" class="form-control" name="user_email" id="user_email" aria-label="E-mail" maxlength="70" disabled value="<?php echo esc_attr($userFields['currentUser']->user_email); ?>" required>
+                        <input type="email" class="form-control" name="user_email" id="user_email" aria-label="E-mail" maxlength="70" value="<?php echo esc_attr($user_email); ?>" required>
                     </div>
                 </div>
                 <?php if(!$userFields): ?>
@@ -136,7 +139,7 @@
         </div>
     </section>
     <div class="container p-5 text-end">
-        <?php $userID = (isset($userFields, $userFields['ID'])) ? $userFields['ID'] : ''; ?>
+        <?php $userID = $userFields['currentUser']->ID ?? ''; ?>
         <input type="hidden" name="userid" id="userid" value="<?php echo esc_attr($userID); ?>">
 
         <div class="col-12">
@@ -146,6 +149,4 @@
             </button>
         </div>
     </div>
-
-
 </form>

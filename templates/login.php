@@ -1,9 +1,9 @@
 
-<?php if(isset($_SESSION['customer_loggedin'])): ?>
+<?php if(is_user_logged_in()): $current_user = wp_get_current_user(); ?>
     <div class="btn-group dropstart">
-        <a class="border-0 bg-transparent" type="button" href="<?php echo esc_url(get_permalink($_SESSION['customer_id'])); ?>">
+        <a class="border-0 bg-transparent" type="button" href="<?php echo esc_url(site_url()); ?>/admin">
             <?php
-            $userProfileImage = get_the_post_thumbnail_url($_SESSION['customer_id'], 'thumbnail');
+            $userProfileImage = get_the_post_thumbnail_url($current_user->ID, 'thumbnail');
             if($userProfileImage):?>
                 <img src="<?php echo esc_url($userProfileImage); ?>" class="nav-image-profile">
             <?php else: ?>

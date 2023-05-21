@@ -7,13 +7,13 @@
 </section>
 
 <?php
-
-$FavMeta = get_post_meta($_SESSION['customer_id'], 'custom') ?? null;
+$current_user = wp_get_current_user();
+$FavMeta = get_user_meta($current_user->ID, 'custom') ?? null;
 $Favorites = (json_decode($FavMeta[0]['favorite_items'])) ?? array();
 if(!empty($Favorites)){
     $query = new WP_Query(array(
         'post_type' => 'stablishments',
-        'post_status' => array('publish', 'pending'),
+        'post_status' => array('publish'),
         'post__in' => $Favorites,
     ));
 }

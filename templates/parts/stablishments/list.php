@@ -1,14 +1,9 @@
     <?php
+    $current_user = wp_get_current_user();
     $query = new WP_Query(array(
         'post_type' => 'stablishments',
         'post_status' => array('publish', 'pending'),
-        'tax_query' => array(
-            array(
-                'taxonomy' => 'partner_user',
-                'terms' => get_the_ID(),
-                'field' => 'slug',
-            )
-        ),
+        'author' => $current_user->ID,
     ));
     $baseUrl = get_permalink();
     ?>

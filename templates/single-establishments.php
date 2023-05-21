@@ -26,8 +26,9 @@
             </div>
 
             <?php
-            if(isset($_SESSION['customer_id'])){
-                $FavMeta = get_post_meta($_SESSION['customer_id'], 'custom') ?? null;
+            if(is_user_logged_in()){
+                $current_user = wp_get_current_user();
+                $FavMeta = get_use_meta($current_user->ID, 'custom') ?? null;
                 $Favorites = (isset($FavMeta[0]['favorite_items'])) ? json_decode($FavMeta[0]['favorite_items']) : array();
             }
             $favClass = (isset($Favorites) && is_int(array_search(get_the_ID(), $Favorites))) ? 'rounded' : 'outlined';

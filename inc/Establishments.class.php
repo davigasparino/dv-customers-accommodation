@@ -27,7 +27,7 @@ class Establishments {
                 'plural' => 'Estabelecimentos',
             );
             $args = array(
-                'supports' => array( 'title', 'editor', 'thumbnail' ),
+                'supports' => array( 'title', 'editor', 'thumbnail', 'author' ),
                 'menu_icon' => 'dashicons-admin-multisite',
                 'rewrite' => array( 'slug' => 'acomodacoes' ),
             );
@@ -70,7 +70,7 @@ class Establishments {
             'Establisment_ajax'   => $ajax_slug,
         ];
 
-        if( isset($post) && $this->cpt === $post->post_type || get_page_template_slug() == 'user-panel.php' ){
+        if( isset($post) && $this->cpt === $post->post_type || get_page_template_slug() == 'userpanel' ){
             wp_enqueue_script( 'stablishments-cpt-richtexteditor', CustomerURL . '/assets/richtexteditor/rte.js', array(), false, true );
             wp_enqueue_script( 'stablishments-cpt-richtexteditor-plugins', CustomerURL . '/assets/richtexteditor/plugins/all_plugins.js', array(), false, true );
             wp_enqueue_script( 'stablishments-cpt-scripts', CustomerURL . '/assets/public/js/establishments.js', array(), false, true );
@@ -85,7 +85,7 @@ class Establishments {
     public function EstablismentEnqueueStyles() : void
     {
         global $post;
-        if(isset($post) && $this->cpt === $post->post_type || get_page_template_slug() == 'user-panel.php') {
+        if(isset($post) && $this->cpt === $post->post_type || get_page_template_slug() == 'userpanel') {
             wp_enqueue_style('stablishments-photoswipe-css', CustomerURL . '/assets/photoswipe/photoswipe.css');
             wp_enqueue_style('stablishments-rte-css', CustomerURL . '/assets/richtexteditor/rte_theme_default.css');
             wp_enqueue_style('stablishments-cpt-css', CustomerURL . '/assets/public/css/style.css');
@@ -341,6 +341,7 @@ class Establishments {
         if($stablishmentID){
             wp_update_post( array(
                 'ID'         => $stablishmentID,
+                'post_author' => $userID,
             ));
             $actionstate = 'atualizado';
         }else{
@@ -349,22 +350,10 @@ class Establishments {
                 'post_name' => $name,
                 'post_type' => $this->cpt,
                 'post_content' => $content_stablishment,
-                'post_status' => 'publish'
+                'post_status' => 'publish',
+                'post_author' => $userID
             ));
         }
-
-        $term_id = wp_insert_term($userID, 'partner_user', array(
-            'description' => '',
-            'slug' => '',
-        ));
-
-        if (!is_wp_error($term_id)) {
-            $term_id = $term_id['term_id'];
-        } else {
-            $term_id = $term_id->error_data['term_exists'];
-        }
-
-        wp_set_object_terms($stablishmentID, $term_id, 'partner_user');
 
         update_post_meta( $stablishmentID, 'estab_fields', $args );
         update_post_meta( $stablishmentID, 'estab_address', $addressArgs );

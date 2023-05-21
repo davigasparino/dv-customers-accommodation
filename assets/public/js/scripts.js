@@ -45,15 +45,15 @@ const loginSend = (isValid) => {
 
     let params = {
         action: 'loginUser',
-        nounce: Customer_js.nounce,
-        url: Customer_js.Customer_ajax,
+        nounce: CustomUser_js.nounce,
+        url: CustomUser_js.CustomUser_ajax,
         userLogin: userLogin,
         userPass: userPass
     };
 
     params = utils.objectScriptsToUrlParams(params);
 
-    fetch(Customer_js.url + '?' + params)
+    fetch(CustomUser_js.url + '?' + params)
         .then(response => {
             if(response.ok) {
                 console.log('response.ok => ', response.ok);
@@ -89,7 +89,7 @@ const userLogout = () => {
 
     params = utils.objectScriptsToUrlParams(params);
 
-    fetch(Customer_js.url + '?' + params)
+    fetch(CustomUser_js.url + '?' + params)
         .then(response => {
             if(response.ok) return response.json();
         })
@@ -129,9 +129,9 @@ const favoriteItem = (event) =>{
 
     params = utils.objectScriptsToUrlParams(params);
 
-    console.log("Customer_js => ", Customer_js.url);
+    console.log("CustomUser_js => ", CustomUser_js.url);
 
-    fetch( Customer_js.url + '?' + params)
+    fetch( CustomUser_js.url + '?' + params)
         .then(response => {
             if(response.ok) return response.json();
         })

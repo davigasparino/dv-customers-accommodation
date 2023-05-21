@@ -1,5 +1,6 @@
 <?php
 $userFields = get_query_var('userFields');
+$current_user = wp_get_current_user();
 $userEmail = (isset($userFields, $userFields['userfields'], $userFields['userfields']['email'])) ? $userFields['userfields']['email'] : '';
 $lastname = (isset($userFields, $userFields['userfields'], $userFields['userfields']['lastname'])) ? $userFields['userfields']['lastname'] : '';
 ?>
@@ -29,7 +30,7 @@ $lastname = (isset($userFields, $userFields['userfields'], $userFields['userfiel
                     <form id="image-file-form" class="g-3" action="" method="post" enctype="multipart/form-data">
                         <div class="input-group mb-3">
                             <input type="file" class="form-control" name="profileImage" id="profileImage" required>
-                            <input type="hidden" id="image_user_id" name="image_user_id" value="<?php echo esc_attr($_SESSION['customer_id']); ?>">
+                            <input type="hidden" id="image_user_id" name="image_user_id" value="<?php echo esc_attr($current_user->ID); ?>">
                             <label class="input-group-text pt-0 pb-0 m-0" for="profileImage">
                                 <button class="btn btn-small p-0 m-0 border-0" type="submit" id="updateUserImage">
                                     <span class="material-symbols-outlined">cloud_upload</span>

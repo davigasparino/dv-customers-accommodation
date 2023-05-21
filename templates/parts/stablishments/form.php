@@ -346,7 +346,11 @@
         </div>
     </section>
 
-    <input type="hidden" name="userid" id="userid" value="<?php echo esc_attr($_SESSION['customer_id']); ?>">
+    <?php
+        $current_user = wp_get_current_user();
+        $theUser = $current_user->ID;
+    ?>
+    <input type="hidden" name="userid" id="userid" value="<?php echo esc_attr($theUser); ?>">
     <input type="hidden" name="urlreturn" id="urlreturn" value="<?php echo esc_attr(get_permalink().get_query_var('panel').'/'.get_query_var('partner').'/'); ?>">
 
     <div class="col-12 text-end">

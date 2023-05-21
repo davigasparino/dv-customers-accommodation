@@ -182,8 +182,8 @@
 
         let params = {
             action: 'UpdateUserDatas',
-            nounce: Customer_js.nounce,
-            url: Customer_js.Customer_ajax
+            nounce: CustomUser_js.nounce,
+            url: CustomUser_js.CustomUser_ajax
         };
 
         let countPhones = document.querySelectorAll('.formPhones');
@@ -203,7 +203,7 @@
 
         params = utils.objectScriptsToUrlParams(params);
 
-        fetch(Customer_js.url + '?' + params)
+        fetch(CustomUser_js.url + '?' + params)
             .then(response => {
                 if(response.ok) return response.json();
             })
@@ -248,7 +248,6 @@
                 if(allInputClones[i].querySelector('input').classList.contains('required')){
                     allInputClones[i].querySelector('input').required = true;
                 }
-                console.log('tem a classe', allInputClones[i].querySelector('input').classList.contains('required'));
             }
         }
     }

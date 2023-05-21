@@ -368,10 +368,12 @@
 
         public function FavoriteItem()
         {
-            if(!$_SESSION['customer_id']) return false;
+            if(!is_user_logged_in()) return false;
+
+            $current_user = wp_get_current_user();
 
             $id = sanitize_text_field($_REQUEST['id']) ?? null;
-            $meta = get_post_meta($_SESSION['customer_id'], 'custom') ?? null;
+            $meta = get_user_meta($current_user->ID, 'custom') ?? null;
             $favorites = (json_decode($meta[0]['favorite_items'])) ?? array();
 
             $findItem = array_search($id, $favorites);
@@ -383,7 +385,7 @@
                 $favorites[] = $id;
             }
 
-            update_post_meta($_SESSION['customer_id'], 'custom', array('favorite_items' => wp_json_encode($favorites)));
+            update_user_meta($current_user, 'custom', array('favorite_items' => wp_json_encode($favorites)));
 
             return wp_send_json(array(
                 'status' => 'ok',
