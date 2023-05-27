@@ -20,12 +20,12 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12 col-lg-3 col-12 shadow position-relative col-cms-left py-4">
-                <div class="border-0">
+                <div class="border-0 mw-300px">
                     <div class="card-body py-0 px-0 px-md-3">
                         <?php include(CustomerPATH . '/templates/parts/single/form_image.php'); ?>
                     </div>
                 </div>
-                <div class="px-0 px-md-3 admin-menu sticky-top">
+                <div class="px-0 px-md-3 admin-menu sticky-top mw-300px">
                     <div class="btn-group-vertical mt-3 w-100" role="group" aria-label="Vertical button group">
                         <?php foreach($adminLinks as $key_link => $link_value): ?>
                             <a

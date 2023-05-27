@@ -16,7 +16,21 @@ utils.on(document, 'click', '#userLogout', function(event) {
 
 utils.on(document, 'click', '.establishments-cards .favorite-btn', function(event){
     favoriteItem(event);
-})
+});
+
+utils.on(document, 'click', '.btn-minus, .btn-plus', function(e){
+    let input = e.target.parentNode.parentNode.querySelector('input');
+
+    if(!input.value){
+        input.value = 0;
+    }
+
+    if(e.target.closest('.btn-minus') && input.value > 0){
+        input.value = input.value - 1;
+    }else if(!e.target.closest('.btn-minus')){
+        input.value = parseInt(input.value) + 1;
+    }
+});
 
 const loginSend = (isValid) => {
 
@@ -109,9 +123,13 @@ const userLogout = () => {
 
 const favoriteItem = (event) =>{
 
-    if(isScriptsLoading){
+    let ItemID = event.target.parentNode.dataset.id;
+
+    if(!ItemID)
         return false;
-    }
+
+    if(isScriptsLoading)
+        return false;
 
     isScriptsLoading = true;
 
@@ -125,7 +143,7 @@ const favoriteItem = (event) =>{
 
     let params = {
         action: 'FavoriteItem',
-        id: event.target.parentNode.dataset.id
+        id: ItemID
     };
 
     params = utils.objectScriptsToUrlParams(params);

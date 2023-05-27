@@ -28,7 +28,7 @@
             <?php
             if(is_user_logged_in()){
                 $current_user = wp_get_current_user();
-                $FavMeta = get_use_meta($current_user->ID, 'custom') ?? null;
+                $FavMeta = get_user_meta($current_user->ID, 'custom') ?? null;
                 $Favorites = (isset($FavMeta[0]['favorite_items'])) ? json_decode($FavMeta[0]['favorite_items']) : array();
             }
             $favClass = (isset($Favorites) && is_int(array_search(get_the_ID(), $Favorites))) ? 'rounded' : 'outlined';
@@ -86,14 +86,70 @@
                 <?php echo $estab_fields['description']; ?>
             </div>
             <div class="col-4 ps-md-4">
-                <div class="card checkout border-secondary mb-3 shadow sticky-top">
-                    <div class="card-header">Reserva</div>
+                <div class="card card-checkout checkout border-secondary mb-3 shadow sticky-top z-1">
                     <div class="card-body text-secondary">
-                        <h5 class="card-title">Secondary card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <form action="/checkout" method="get">
+                            <div class="row calendars">
+                                <div class="vstack col-6 position-relative">
+                                    <label for="checkin" class="hstack justify-content-center">
+                                        <span class="material-symbols-rounded">calendar_month</span> <small>Check-in</small>
+                                    </label>
+                                    <input type="date" id="checkin" name="checkin">
+                                </div>
+                                <div class="vstack col-6 position-relative">
+                                    <label for="checkout" class="hstack justify-content-center">
+                                        <span class="material-symbols-rounded">calendar_month</span> <small>Checkout</small>
+                                    </label>
+                                    <input type="date" id="checkout" name="checkout">
+                                </div>
+                            </div>
+
+                            <?php require_once HelpHousiPATH . 'templates/people.php'; ?>
+
+                            <input type="hidden" name="coust" id="coust" value="<?php echo $estab_fields['coust']; ?>">
+                            <input type="hidden" name="post" id="post" value="<?php the_ID() ?>">
+                            <button type="submit" class="btn w-100 checkout-link btn-brand">
+                                <div class="hstack justify-content-between gap-3">
+                                    <div class="px-3">
+                                        R$<strong><?php echo $estab_fields['coust']; ?></strong>
+                                    </div>
+                                    <div class="vr"></div>
+                                    <div class="px-3">
+                                        RESERVAR
+                                    </div>
+                                </div>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="..." class="card-img-top" alt="...">
+
+        <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div>
+
+    <div class="card" aria-hidden="true">
+        <img src="..." class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title placeholder-glow">
+                <span class="placeholder col-6"></span>
+            </h5>
+            <p class="card-text placeholder-glow">
+                <span class="placeholder col-7"></span>
+                <span class="placeholder col-4"></span>
+                <span class="placeholder col-4"></span>
+                <span class="placeholder col-6"></span>
+                <span class="placeholder col-8"></span>
+            </p>
+            <a class="btn btn-primary disabled placeholder col-6"></a>
         </div>
     </div>
 

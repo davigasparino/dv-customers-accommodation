@@ -267,3 +267,63 @@
 .admin-menu.sticky-top{
     top: 5em;
 }
+
+.mw-300px{
+    max-width: 300px;
+    margin: 0 auto;
+}
+@media only screen and (max-width: 991px) {
+    .mw-300px{
+        max-width: 100%;
+    }
+}
+
+.checkout-numbers button.btn-minus {
+    border: 1px solid #222;
+    border-radius: 40% 0 0 40%;
+    border-right: none;
+    padding: 4px 0 4px 4px;
+}
+.checkout-numbers button.btn-plus {
+    border: 1px solid #222;
+    border-radius: 0 40% 40% 0;
+    border-left: none;
+    padding: 4px 4px  4px 0;
+}
+.checkout-numbers input{
+    border-radius: 0;
+    border: none;
+    min-height: inherit;
+    padding: 4px 0;
+}
+.checkout-numbers .form-group{
+    border-top: 1px solid #222;
+    border-bottom: 1px solid #222;
+    display: flex;
+    height: 26px;
+}
+.checkout-numbers span{
+    font-size: 15px;
+    line-height: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 16px;
+    padding: 4px;
+    min-height: inherit;
+}
+
+.checkout-link{
+    border: 1px solid #999;
+}
+.payment-page button.btn.btn-brand {
+    width: 100%;
+    border: 1px solid #222;
+    margin: 10px 0px;
+    padding: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.checkout.sticky-lg-top{
+    top: 6em;
+}
